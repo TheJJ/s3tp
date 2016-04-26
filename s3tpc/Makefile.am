@@ -1,7 +1,7 @@
 # build libs3tp and the s3tp tool
 
 # c11 plus all warnings
-AM_CFLAGS = -std=c11 -Wall -Wextra -pedantic
+AM_CFLAGS = -std=c11 -Wall -Wextra -pedantic -pthread
 
 # flex flags
 AM_LFLAGS = -Ca
@@ -10,7 +10,8 @@ AM_LFLAGS = -Ca
 lib_LTLIBRARIES = libs3tp.la
 libs3tp_la_LDFLAGS = -no-undefined
 libs3tp_la_SOURCES = \
-                     s3tp.c
+                     init.c\
+                     dispatcher.c
 
 s3tpincludedir = $(includedir)/s3tp
 s3tpinclude_HEADERS = \
