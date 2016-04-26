@@ -13,13 +13,17 @@
 
 #include "util.h"
 
+
 static pthread_t main_worker;
 static int control_socket;
+int is_running;
+
 
 void *dispatch_socket(UNUSED(void* user_param)) {
 	int ret = dispatch_loop(control_socket);
 	return NULL;
 }
+
 
 /** Makes the control socket a non-blocking one. */
 int make_socket_non_blocking() {
@@ -37,6 +41,7 @@ int make_socket_non_blocking() {
 
 	return 0;
 }
+
 
 int init_control_socket(const char *s3tpd_socket_path) {
 	struct sockaddr_un s3tpd_addr;
@@ -66,19 +71,24 @@ int init_control_socket(const char *s3tpd_socket_path) {
 	return 0;
 }
 
-int s3tp_init(void) {
+
+int s3tp_init() {
 	return s3tp_init_with_socket(S3TPD_SOCKET_PATH);
 }
+
 
 int s3tp_init_with_socket(const char *s3tpd_socket_path) {
 	int ret;
 	if ((ret = init_control_socket(s3tpd_socket_path)) != 0) {
 		return ret;
 	}
+	is_running = 1;
 	return pthread_create(&main_worker, NULL, dispatch_socket, NULL);
 }
 
+
 void s3tp_destroy() {
+	is_running = 0;
 	close(control_socket);
 	pthread_join(main_worker, NULL);
 }
