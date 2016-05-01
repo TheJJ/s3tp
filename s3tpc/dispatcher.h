@@ -3,6 +3,6 @@
 
 extern int is_running;
 
-int dispatch_loop(int control_socket);
+int dispatch_loop(int control_socket, int event_fd);
 
 #endif

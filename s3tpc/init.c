@@ -6,21 +6,25 @@
 
 #include <fcntl.h>
 #include <pthread.h>
+#include <sys/eventfd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <unistd.h>
 
+#include "dispatcher.h"
 #include "util.h"
 
 
 static pthread_t main_worker;
 static int control_socket;
+static int notification_fd;
+
 int is_running;
 
 
 void *dispatch_socket(UNUSED(void* user_param)) {
-	int ret = dispatch_loop(control_socket);
+	int ret = dispatch_loop(control_socket, notification_fd);
 	return NULL;
 }
 
@@ -82,6 +86,10 @@ int s3tp_init_with_socket(const char *s3tpd_socket_path) {
 	if ((ret = init_control_socket(s3tpd_socket_path)) != 0) {
 		return ret;
 	}
+	if((notification_fd = eventfd(0, EFD_NONBLOCK)) < 0) {
+		// TODO proper error code
+		return notification_fd;
+	}
 	is_running = 1;
 	return pthread_create(&main_worker, NULL, dispatch_socket, NULL);
 }
@@ -90,5 +98,6 @@ int s3tp_init_with_socket(const char *s3tpd_socket_path) {
 void s3tp_destroy() {
 	is_running = 0;
 	close(control_socket);
+	close(notification_fd);
 	pthread_join(main_worker, NULL);
 }
