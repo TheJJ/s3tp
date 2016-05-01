@@ -11,7 +11,8 @@ lib_LTLIBRARIES = libs3tp.la
 libs3tp_la_LDFLAGS = -no-undefined
 libs3tp_la_SOURCES = \
                      init.c\
-                     dispatcher.c
+                     dispatcher.c\
+                     ringbuffer.c
 
 s3tpincludedir = $(includedir)/s3tp
 s3tpinclude_HEADERS = \

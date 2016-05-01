@@ -18,13 +18,14 @@
 
 static pthread_t main_worker;
 static int control_socket;
-static int notification_fd;
 
+
+int notification_fd;
 int is_running;
 
 
 void *dispatch_socket(UNUSED(void* user_param)) {
-	int ret = dispatch_loop(control_socket, notification_fd);
+	int ret = dispatch_loop(control_socket);
 	return NULL;
 }
 
@@ -97,7 +98,8 @@ int s3tp_init_with_socket(const char *s3tpd_socket_path) {
 
 void s3tp_destroy() {
 	is_running = 0;
-	close(control_socket);
-	close(notification_fd);
+	notify_dispatcher();
 	pthread_join(main_worker, NULL);
+	close(notification_fd);
+	close(control_socket);
 }
