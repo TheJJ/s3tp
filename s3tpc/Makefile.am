@@ -12,6 +12,7 @@ libs3tp_la_LDFLAGS = -no-undefined
 libs3tp_la_SOURCES = \
                      init.c\
                      dispatcher.c\
+                     hashmap.c\
                      ringbuffer.c
 
 s3tpincludedir = $(includedir)/s3tp

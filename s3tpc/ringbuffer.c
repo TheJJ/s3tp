@@ -23,6 +23,10 @@ struct ring_buffer *rb_create(size_t capacity) {
 	rb->start = 0;
 	rb->end = 0;
 	rb->buffer = malloc(rb->length);
+	if (rb->buffer == NULL) {
+		free(rb);
+		return NULL;
+	}
 	return rb;
 }
 
@@ -31,9 +35,7 @@ void rb_destroy(struct ring_buffer *rb) {
 	if (rb == NULL) {
 		return;
 	}
-	if (rb->buffer != NULL) {
-		free(rb->buffer);
-	}
+	free(rb->buffer);
 	free(rb);
 }
 
