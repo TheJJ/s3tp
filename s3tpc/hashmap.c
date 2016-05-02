@@ -73,6 +73,7 @@ void *hm_insert(struct hash_map *hm, unsigned key, void *value) {
 	struct hash_map_entry *entry = *bucket;
 	if (entry == NULL) {
 		*bucket = create_entry(key, value);
+		hm->size += 1;
 		return NULL;
 	}
 
@@ -91,6 +92,7 @@ void *hm_insert(struct hash_map *hm, unsigned key, void *value) {
 	}
 
 	entry->next = create_entry(key, value);
+	hm->size += 1;
 	return NULL;
 }
 
@@ -109,6 +111,7 @@ void *hm_remove(struct hash_map *hm, unsigned key) {
 		old_value = entry->value;
 		*bucket = entry->next;
 		free(entry);
+		hm->size -= 1;
 		return old_value;
 	}
 
@@ -118,6 +121,7 @@ void *hm_remove(struct hash_map *hm, unsigned key) {
 			old_value = current->value;
 			entry->next = current->next;
 			free(current);
+			hm->size -= 1;
 			return old_value;
 		}
 		entry = current;

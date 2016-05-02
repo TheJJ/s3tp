@@ -10,9 +10,10 @@ AM_LFLAGS = -Ca
 lib_LTLIBRARIES = libs3tp.la
 libs3tp_la_LDFLAGS = -no-undefined
 libs3tp_la_SOURCES = \
-                     init.c\
+                     connection.c\
                      dispatcher.c\
                      hashmap.c\
+                     init.c\
                      ringbuffer.c
 
 s3tpincludedir = $(includedir)/s3tp

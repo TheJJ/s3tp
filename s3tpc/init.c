@@ -12,6 +12,7 @@
 #include <sys/un.h>
 #include <unistd.h>
 
+#include "connection_internal.h"
 #include "dispatcher.h"
 #include "util.h"
 
@@ -77,20 +78,24 @@ int init_control_socket(const char *s3tpd_socket_path) {
 }
 
 
-int s3tp_init() {
-	return s3tp_init_with_socket(S3TPD_SOCKET_PATH);
-}
-
-
-int s3tp_init_with_socket(const char *s3tpd_socket_path) {
+int s3tp_init(const char *s3tpd_socket_path) {
+	const char *socket_path = s3tpd_socket_path;
+	if (socket_path == NULL) {
+		socket_path = S3TPD_SOCKET_PATH;
+	}
 	int ret;
-	if ((ret = init_control_socket(s3tpd_socket_path)) != 0) {
+	if ((ret = init_control_socket(socket_path)) != 0) {
 		return ret;
 	}
-	if((notification_fd = eventfd(0, EFD_NONBLOCK)) < 0) {
+	if ((notification_fd = eventfd(0, EFD_NONBLOCK)) < 0) {
 		// TODO proper error code
 		return notification_fd;
 	}
+	if ((ret = init_connections()) != 0) {
+		// TODO proper error code
+		return ret;
+	}
+
 	is_running = 1;
 	return pthread_create(&main_worker, NULL, dispatch_socket, NULL);
 }

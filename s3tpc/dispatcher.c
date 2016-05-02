@@ -93,7 +93,7 @@ int dispatch_loop(int control_socket) {
 				if (is_running == 0) {
 					break;
 				}
-				// TODO process send queues
+				// TODO process send queues or other events
 			} else if ((event->events & EPOLLERR) || (event->events & EPOLLHUP)) {
 				printf("There was an error\n");
 				// TODO handle error or hangup (remote closed?)
