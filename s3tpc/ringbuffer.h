@@ -2,22 +2,36 @@
 #define S3TPC_RINGBUFFER_H_
 
 
-#include <unistd.h>
+#include <memory>
 
 
-struct ring_buffer;
+namespace s3tpc {
 
-struct ring_buffer *rb_create(size_t capacity);
-void rb_destroy(struct ring_buffer *rb);
 
-ssize_t rb_read(struct ring_buffer *rb, char *destination, size_t length);
-ssize_t rb_write(struct ring_buffer *rb, const char *source, size_t length);
+class RingBuffer {
+private:
+	size_t length;
+	size_t start;
+	size_t end;
+	std::unique_ptr<char[]> buffer;
 
-int rb_is_empty(struct ring_buffer *rb);
-int rb_is_full(struct ring_buffer *rb);
-size_t rb_capacity(struct ring_buffer *rb);
-size_t rb_available_data(struct ring_buffer *rb);
-size_t rb_available_space(struct ring_buffer *rb);
+public:
+	RingBuffer(size_t capacity);
+	virtual ~RingBuffer() = default;
+
+	size_t read(char *destination, size_t length);
+	size_t write(const char *source, size_t length);
+
+	bool is_empty() const;
+	bool is_full() const;
+
+	size_t get_capacity() const;
+	size_t get_available_data() const;
+	size_t get_available_space() const;
+};
+
+
+}
 
 
 #endif

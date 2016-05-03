@@ -2,8 +2,7 @@
 #define S3TPC_S3TP_H_
 
 
-#include "connection.h"
-#include "init.h"
+#include "s3tpc_c.h"
 
 
 #endif
