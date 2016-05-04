@@ -1,0 +1,75 @@
+\documentclass[a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+
+% multiline comments with \nope lol text //
+% or \comment{lol text}
+\long\def\nope #1 //{}
+
+\newcommand{\comment}[1]{}
+
+\usepackage[pdftex,%
+            colorlinks=true,linkcolor=blue,citecolor=red,%
+            anchorcolor=red,urlcolor=blue,bookmarks=true,%
+            bookmarksopen=true,bookmarksopenlevel=0,plainpages=false,%
+            bookmarksnumbered=true,hyperindex=false,pdfstartview=,%
+            pdfauthor={Jonas Jelten},%
+            pdftitle={S3TP},%
+            pdfsubject={simple stupid satellite transmission protocol},%
+            pdfkeywords={},%
+            pdfcreator={pdfLaTeX on JJ-Gentoo-GNU/Linux}%
+]{hyperref}
+
+\usepackage{palatino}
+\usepackage[ngerman,english]{babel}
+\selectlanguage{ngerman}
+\usepackage{tabularx}
+\usepackage{graphicx}
+
+
+\begin{document}
+
+\subsubsection{S3TP - Simple-Stupid Satellite Transport Protocol}
+
+\texttt{S3TP} is the transport protocol for data transmission between the
+on-board SoC and ground station. Basically it is designed like TCP, but adapted
+for space usage.
+
+The system is designed to work in userspace only, assuming the Linux kernel can
+do all the SPI communication to the \texttt{COM} transmission board. If kernel
+components need to be tweaked because of problems with SPI components, our
+system will still be functional and, because being userland applications only,
+compatible for future Linux releases.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{s3tp-overview.pdf}
+    \caption{S3TP concept overview}
+    \label{fig:s3tpoverview}
+\end{figure}
+
+An overview of the system can be seen in figure \ref{fig:s3tpoverview}. The
+central component is the \texttt{s3tpd}, the communication daemon. It is written
+in \texttt{Python 3} and uses the \texttt{asyncio} module for asynchronous
+interaction with the Linux kernel.
+
+\texttt{s3tpd} runs once for each radio device. All connections over the air are
+managed by it. Each connection provides reliable in-order transmission of data
+packets. They are transported to the peer-\texttt{s3tpd} and passed to the
+receiving tool. Thus, \texttt{s3tp} provides a transparent layer for
+connection-oriented which can be replaced easily.
+
+\texttt{s3tpc} is a \texttt{C++} library with a \texttt{C} API. The interface to
+the tool is very minimal, a tool can \texttt{listen} on ports and
+\texttt{connect} to listened ports on the peer. \texttt{read} and \texttt{write}
+can then be done on the connection. A blocking and nonblocking mode is available
+when using the library so the application remains flexible.
+
+TODO: protocol overview, more details?
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

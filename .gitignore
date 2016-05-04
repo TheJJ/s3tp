@@ -57,3 +57,10 @@ Makefile.in
 # ctrlp and rope for vim
 .ctrlp
 .ropeproject
+
+# LaTeX
+*.aux
+*.log
+*.out
+*.pdf
+*.gz
