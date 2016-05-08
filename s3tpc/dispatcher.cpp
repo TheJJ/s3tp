@@ -45,6 +45,8 @@ void Dispatcher::stop() {
 	});
 	this->push_event(stop_event);
 	this->main_worker->join();
+	// TODO proper closing
+	close(this->notification_fd);
 }
 
 
@@ -52,6 +54,11 @@ void Dispatcher::push_event(const std::shared_ptr<Event> &event) {
 	std::unique_lock<std::mutex> lock{this->event_mutex};
 	this->pending_events.push(event);
 	this->notify();
+}
+
+
+int Dispatcher::get_control_socket() const {
+	return this->parent->get_control_socket();
 }
 
 
@@ -112,16 +119,18 @@ void Dispatcher::main_loop() {
 		for (int i = 0; i < event_count; i++) {
 			event = &events[i];
 
-			uint64_t notification_count = this->get_notification_count(event);
-			if (notification_count > 0) {
-				this->dispatch_queue(notification_count);
-				if (!this->is_running) {
-					break;
-				}
-			} else if ((event->events & EPOLLERR) || (event->events & EPOLLHUP)) {
+			if ((event->events & EPOLLERR) || (event->events & EPOLLHUP)) {
 				// TODO handle error on remote closed or other stuff
 			} else {
-				this->dispatch_event(event);
+				uint64_t notification_count = this->get_notification_count(event);
+				if (notification_count > 0) {
+					this->dispatch_queue(notification_count);
+					if (!this->is_running) {
+						break;
+					}
+				} else if ((event->events & EPOLLIN) && event->data.fd == this->get_control_socket()){
+					this->parent->dispatch_incoming_data();
+				}
 			}
 		}
 	}
@@ -147,10 +156,6 @@ void Dispatcher::dispatch_queue(uint64_t event_count) {
 		event->dispatch(this);
 		event_count--;
 	}
-}
-
-
-void Dispatcher::dispatch_event(struct epoll_event *event) {
 }
 
 

@@ -13,6 +13,8 @@ int main() {
 		perror("Error");
 		return 1;
 	}
+	int connection = s3tp_create();
+	printf("Got connection: %d\n", connection);
 	fgets(input, sizeof(input), stdin);
 	printf("You've entered: %s\n", input);
 	s3tp_destroy();

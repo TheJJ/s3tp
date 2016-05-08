@@ -8,6 +8,7 @@
 
 #include "connection.h"
 #include "dispatcher.h"
+#include "new_connection_event.h"
 
 
 namespace s3tpc {
@@ -29,6 +30,8 @@ public:
 	int get_control_socket() const;
 
 	std::shared_ptr<Connection> create_connection();
+
+	void dispatch_incoming_data();
 
 private:
 	int init_socket();

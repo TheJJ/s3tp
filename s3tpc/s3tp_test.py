@@ -7,7 +7,7 @@ s.listen(1)
 
 while True:
     c, a = s.accept()
-    print(a)
+    print("Connected: " + str(a))
     while True:
         data = c.recv(4096)
         if not data:

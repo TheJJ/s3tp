@@ -43,6 +43,8 @@ public:
 
 	void push_event(const std::shared_ptr<Event> &event);
 
+	int get_control_socket() const;
+
 private:
 	void notify();
 

@@ -46,6 +46,8 @@ void S3TPClient::start() {
 
 void S3TPClient::stop() {
 	this->dispatcher.stop();
+	// TODO proper closing
+	close(this->control_socket);
 }
 
 
@@ -58,7 +60,12 @@ std::shared_ptr<Connection> S3TPClient::create_connection() {
 	auto connection = std::make_shared<Connection>(this);
 	auto event = std::make_shared<NewConnectionEvent>(connection);
 	this->dispatcher.push_event(event);
+	event->wait_for_resolution();
 	return connection;
+}
+
+
+void S3TPClient::dispatch_incoming_data() {
 }
 
 
