@@ -8,8 +8,13 @@ lib_LTLIBRARIES = libs3tp.la
 libs3tp_la_LDFLAGS = -no-undefined -pthread
 libs3tp_la_SOURCES = \
                      s3tpc.cpp\
+                     s3tpc_c.cpp\
+                     connection.cpp\
                      dispatcher.cpp\
-                     ringbuffer.cpp
+                     event.cpp\
+                     new_connection_event.cpp\
+                     ringbuffer.cpp\
+                     stop_event.cpp
 
 s3tpincludedir = $(includedir)/s3tp
 s3tpinclude_HEADERS = \

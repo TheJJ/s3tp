@@ -4,7 +4,9 @@
 
 #include <memory>
 #include <string>
+#include <unordered_map>
 
+#include "connection.h"
 #include "dispatcher.h"
 
 
@@ -25,6 +27,8 @@ public:
 	void stop();
 
 	int get_control_socket() const;
+
+	std::shared_ptr<Connection> create_connection();
 
 private:
 	int init_socket();

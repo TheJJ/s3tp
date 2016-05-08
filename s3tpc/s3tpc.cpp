@@ -1,29 +1,14 @@
 #include "s3tpc.h"
-#include "s3tpc_c.h"
 
+#include <memory>
+#include <system_error>
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <unistd.h>
 
-
-extern "C" {
-
-int s3tp_init(const char *socket_path) {
-	s3tpc::S3TPClient &client = s3tpc::S3TPClient::get_instance();
-	client.connect(socket_path);
-	client.start();
-	return 0;
-}
-
-
-void s3tp_destroy() {
-	s3tpc::S3TPClient &client = s3tpc::S3TPClient::get_instance();
-	client.stop();
-}
-
-}
+#include "new_connection_event.h"
 
 
 namespace s3tpc {
@@ -49,7 +34,7 @@ void S3TPClient::connect(const std::string &socket_path) {
 	int len = strlen(addr.sun_path) + sizeof(addr.sun_family);
 	int ret = ::connect(this->control_socket, (struct sockaddr *)&addr, len);
 	if (ret != 0) {
-		// error
+		throw std::system_error(errno, std::system_category());
 	}
 }
 
@@ -69,10 +54,18 @@ int S3TPClient::get_control_socket() const {
 }
 
 
+std::shared_ptr<Connection> S3TPClient::create_connection() {
+	auto connection = std::make_shared<Connection>(this);
+	auto event = std::make_shared<NewConnectionEvent>(connection);
+	this->dispatcher.push_event(event);
+	return connection;
+}
+
+
 int S3TPClient::init_socket() {
 	int sock = socket(AF_UNIX, SOCK_STREAM, 0);
 	if (sock < 0) {
-		// error
+		throw std::system_error(errno, std::system_category());
 	}
 	this->unblock_socket(sock);
 	return sock;
@@ -83,12 +76,12 @@ void S3TPClient::unblock_socket(int sock) {
 	int ret;
 	int flags = fcntl(sock, F_GETFL, 0);
 	if (flags < 0) {
-		// error
+		throw std::system_error(errno, std::system_category());
 	}
 	flags |= O_NONBLOCK;
 	ret = fcntl(sock, F_SETFL, flags);
 	if (ret != 0) {
-		// error
+		throw std::system_error(errno, std::system_category());
 	}
 }
 
