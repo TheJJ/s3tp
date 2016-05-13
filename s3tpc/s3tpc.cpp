@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include "close_connection_event.h"
 #include "new_connection_event.h"
+#include "protocol_exception.h"
 
 
 namespace s3tpc {
@@ -83,7 +84,11 @@ bool S3TPClient::close_connection(uint16_t id) {
 
 
 void S3TPClient::dispatch_incoming_data() {
-	this->protocol_handler.dispatch_incoming_data();
+	try {
+		this->protocol_handler.dispatch_incoming_data();
+	} catch(const ProtocolException &e) {
+		this->protocol_handler.reset();
+	}
 }
 
 

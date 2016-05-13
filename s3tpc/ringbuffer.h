@@ -53,6 +53,8 @@ public:
 
 	uint16_t read_uint16();
 	uint32_t read_uint32();
+
+	void clear();
 };
 
 

@@ -177,4 +177,10 @@ uint32_t RingBuffer::read_uint32() {
 }
 
 
+void RingBuffer::clear() {
+	this->start = 0;
+	this->end = 0;
+}
+
+
 }

@@ -54,6 +54,8 @@ public:
 
 	bool read_opcode_and_event_id();
 	void reset_opcode_and_event_id();
+
+	void reset();
 };
 
 

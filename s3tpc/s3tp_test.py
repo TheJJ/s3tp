@@ -20,17 +20,14 @@ class S3TPTester:
 
     def handle_connection(self):
         while True:
-            self.receive()
-            self.respond(1, pack("<H", 1337))
+            self.communicate(1, pack("<H", 1337))
+            self.communicate(1, pack("<H", 235))
+            self.communicate(4)
+            self.communicate(4)
 
+    def communicate(self, opcode, content=b""):
             self.receive()
-            self.respond(1, pack("<H", 235))
-
-            self.receive()
-            self.respond(4)
-
-            self.receive()
-            self.respond(5)
+            self.respond(opcode, content)
 
     def receive(self):
         data = self.c.recv(4096)

@@ -71,4 +71,10 @@ void ProtocolHandler::reset_opcode_and_event_id() {
 }
 
 
+void ProtocolHandler::reset() {
+	this->reset_opcode_and_event_id();
+	this->buffer.clear();
+}
+
+
 }
