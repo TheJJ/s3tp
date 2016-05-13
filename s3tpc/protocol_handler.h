@@ -15,7 +15,7 @@ namespace s3tpc {
 
 
 class Connection;
-class NewConnectionEvent;
+class NetworkEvent;
 class S3TPClient;
 
 
@@ -32,21 +32,21 @@ private:
 
 	std::atomic<uint32_t> event_id_counter;
 
-	std::mutex new_connection_mutex;
-	std::unordered_map<uint32_t,std::shared_ptr<NewConnectionEvent>> new_connection_requests;
+	std::mutex events_mutex;
+	std::unordered_map<uint32_t,std::shared_ptr<NetworkEvent>> events;
+
+	int current_opcode;
+	long current_event_id;
 
 public:
 	ProtocolHandler(S3TPClient *parent);
 	virtual ~ProtocolHandler() = default;
 
-	std::shared_ptr<NewConnectionEvent> register_new_connection(const std::shared_ptr<Connection> &connection);
+	std::shared_ptr<NetworkEvent> register_new_connection(const std::shared_ptr<Connection> &connection);
 
 	void dispatch_incoming_data();
 
-private:
-	int read_message_opcode();
-
-	void handle_new_connection(size_t response_size, bool success);
+	bool read_opcode_and_event_id();
 };
 
 

@@ -6,7 +6,7 @@
 #include <memory>
 
 #include "connection.h"
-#include "event.h"
+#include "network_event.h"
 
 
 namespace s3tpc {
@@ -15,7 +15,7 @@ namespace s3tpc {
 class Dispatcher;
 
 
-class NewConnectionEvent : public Event {
+class NewConnectionEvent : public NetworkEvent {
 private:
 	std::shared_ptr<Connection> connection;
 
@@ -26,6 +26,7 @@ public:
 	void initialize_connection(uint16_t id);
 
 	virtual void dispatch(Dispatcher *dispatcher);
+	virtual bool handle_response(uint16_t opcode, RingBuffer &buffer);
 };
 
 

@@ -42,6 +42,9 @@ public:
 
 	uint16_t get_uint16(size_t offset=0) const;
 	uint32_t get_uint32(size_t offset=0) const;
+
+	uint16_t read_uint16();
+	uint32_t read_uint32();
 };
 
 

@@ -159,4 +159,18 @@ uint32_t RingBuffer::get_uint32(size_t offset) const {
 }
 
 
+uint16_t RingBuffer::read_uint16() {
+	uint16_t value = this->get_uint16();
+	this->discard(sizeof(uint16_t));
+	return value;
+}
+
+
+uint32_t RingBuffer::read_uint32() {
+	uint32_t value = this->get_uint32();
+	this->discard(sizeof(uint32_t));
+	return value;
+}
+
+
 }

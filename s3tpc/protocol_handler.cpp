@@ -3,6 +3,7 @@
 #include <iostream>
 #include <unistd.h>
 #include "connection.h"
+#include "network_event.h"
 #include "new_connection_event.h"
 #include "opcodes.h"
 #include "s3tpc.h"
@@ -16,14 +17,16 @@ ProtocolHandler::ProtocolHandler(S3TPClient *parent)
 	parent{parent},
 	control_socket{parent->get_control_socket()},
 	buffer{ProtocolHandler::BUFFER_SIZE, true, ProtocolHandler::RECEIVE_SIZE},
-	event_id_counter{0} {
+	event_id_counter{0},
+	current_opcode{-1},
+	current_event_id{-1} {
 }
 
 
-std::shared_ptr<NewConnectionEvent> ProtocolHandler::register_new_connection(const std::shared_ptr<Connection> &connection) {
+std::shared_ptr<NetworkEvent> ProtocolHandler::register_new_connection(const std::shared_ptr<Connection> &connection) {
 	auto event = std::make_shared<NewConnectionEvent>(connection, this->event_id_counter++);
-	std::unique_lock<std::mutex> lock{this->new_connection_mutex};
-	this->new_connection_requests.insert({event->get_id(), event});
+	std::unique_lock<std::mutex> lock{this->events_mutex};
+	this->events.insert({event->get_id(), event});
 	return event;
 }
 
@@ -31,52 +34,38 @@ std::shared_ptr<NewConnectionEvent> ProtocolHandler::register_new_connection(con
 void ProtocolHandler::dispatch_incoming_data() {
 	this->buffer.recv(this->control_socket);
 
-	int opcode = this->read_message_opcode();
-	if (opcode == -1) {
+	if (!this->read_opcode_and_event_id()) {
 		return;
 	}
 
-	switch(opcode) {
-	case NEW_CONNECTION_ACK:
-		this->handle_new_connection(6, true);
-		break;
-	case NEW_CONNECTION_NACK:
-		this->handle_new_connection(4, false);
-		break;
-	default:
-		break;
-	}
-}
-
-
-int ProtocolHandler::read_message_opcode() {
-	if (!this->buffer.is_data_available(2)) {
-		return -1;
-	}
-	return this->buffer.get_uint16();
-}
-
-
-void ProtocolHandler::handle_new_connection(size_t response_size, bool success) {
-	if (!this->buffer.is_data_available(response_size, sizeof(uint16_t))) {
-		return;
-	}
-
-	uint32_t event_id = this->buffer.get_uint32(2);
-
-	std::unique_lock<std::mutex> lock{this->new_connection_mutex};
-	auto connection_it = this->new_connection_requests.find(event_id);
-	if (connection_it == std::end(this->new_connection_requests)) {
+	std::unique_lock<std::mutex> lock{this->events_mutex};
+	auto connection_it = this->events.find(this->current_event_id);
+	if (connection_it == std::end(this->events)) {
 		// TODO illegal response, throw exception or something
 		// does throw really unlock the lock?
+		return;
 	}
-	this->new_connection_requests.erase(connection_it);
+
+	bool processed = connection_it->second->handle_response(this->current_opcode, this->buffer);
+	if (processed) {
+		this->events.erase(connection_it);
+	}
 	lock.unlock();
-	if (success) {
-		uint16_t connection_id = this->buffer.get_uint16(6);
-		connection_it->second->initialize_connection(connection_id);
+}
+
+
+bool ProtocolHandler::read_opcode_and_event_id() {
+	if (this->current_opcode >= 0 && this->current_event_id >= 0) {
+		return true;
 	}
-	this->buffer.discard(8);
+
+	if (!this->buffer.is_data_available(6)) {
+		return false;
+	}
+
+	current_opcode = this->buffer.read_uint16();
+	current_event_id = this->buffer.read_uint32();
+	return true;
 }
 
 
