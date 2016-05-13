@@ -23,10 +23,10 @@ public:
 	NewConnectionEvent(const std::shared_ptr<Connection> &connection, uint32_t id);
 	virtual ~NewConnectionEvent() = default;
 
-	void initialize_connection(uint16_t id);
-
 	virtual void dispatch(Dispatcher *dispatcher);
 	virtual bool handle_response(uint16_t opcode, RingBuffer &buffer);
+
+	bool handle_new_connection(RingBuffer &buffer);
 };
 
 

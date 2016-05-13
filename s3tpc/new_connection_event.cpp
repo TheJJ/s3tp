@@ -4,6 +4,7 @@
 #include <sys/socket.h>
 #include "dispatcher.h"
 #include "opcodes.h"
+#include "protocol_exception.h"
 
 
 namespace s3tpc {
@@ -16,12 +17,6 @@ NewConnectionEvent::NewConnectionEvent(const std::shared_ptr<Connection> &connec
 }
 
 
-void NewConnectionEvent::initialize_connection(uint16_t id) {
-	this->connection->initialize(id);
-	this->resolve();
-}
-
-
 void NewConnectionEvent::dispatch(Dispatcher *dispatcher) {
 	int control_socket = dispatcher->get_control_socket();
 
@@ -31,17 +26,28 @@ void NewConnectionEvent::dispatch(Dispatcher *dispatcher) {
 	send(control_socket, &event_id, 4, 0);
 }
 
-bool NewConnectionEvent::handle_response(uint16_t opcode, RingBuffer &buffer) {
-	if (opcode == NEW_CONNECTION_NACK) {
-		return true;
-	}
 
+bool NewConnectionEvent::handle_response(uint16_t opcode, RingBuffer &buffer) {
+	switch(opcode) {
+	case NEW_CONNECTION_ACK:
+		return this->handle_new_connection(buffer);
+	case NEW_CONNECTION_NACK:
+		this->resolve();
+		return true;
+	default:
+		throw ProtocolException{"Illegal opcode for new connection event."};
+	}
+}
+
+
+bool NewConnectionEvent::handle_new_connection(RingBuffer &buffer) {
 	if (!buffer.is_data_available(2)) {
 		return false;
 	}
 
 	uint16_t connection_id = buffer.read_uint16();
-	this->initialize_connection(connection_id);
+	this->connection->initialize(connection_id, this->connection);
+	this->resolve();
 	return true;
 }
 

@@ -21,10 +21,11 @@ Connection::~Connection() {
 }
 
 
-void Connection::initialize(uint16_t id) {
+void Connection::initialize(uint16_t id, const std::shared_ptr<Connection> &tracked_self) {
 	if (!this->initialized) {
 		this->initialized = true;
 		this->id = id;
+		this->parent->register_connection(tracked_self);
 	}
 }
 

@@ -34,7 +34,10 @@ int s3tp_create() {
 	s3tpc::S3TPClient &client = s3tpc::S3TPClient::get_instance();
 	// TODO handle error
 	auto connection = client.create_connection();
-	return connection->get_id();
+	if (connection->is_initialized()) {
+		return connection->get_id();
+	}
+	return -1;
 }
 
 

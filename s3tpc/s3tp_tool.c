@@ -15,6 +15,8 @@ int main() {
 	}
 	int connection = s3tp_create();
 	printf("Got connection: %d\n", connection);
+	int connection2 = s3tp_create();
+	printf("Got connection2: %d\n", connection2);
 	fgets(input, sizeof(input), stdin);
 	printf("You've entered: %s\n", input);
 	s3tp_destroy();

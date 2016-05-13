@@ -22,6 +22,8 @@ private:
 	ProtocolHandler protocol_handler;
 	Dispatcher dispatcher;
 
+	std::unordered_map<uint16_t,std::shared_ptr<Connection>> connections;
+
 public:
 	S3TPClient();
 	virtual ~S3TPClient();
@@ -35,6 +37,8 @@ public:
 	std::shared_ptr<Connection> create_connection();
 
 	void dispatch_incoming_data();
+
+	void register_connection(const std::shared_ptr<Connection> &connection);
 
 private:
 	int init_socket();

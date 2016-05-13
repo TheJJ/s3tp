@@ -14,6 +14,7 @@ libs3tp_la_SOURCES = \
                      event.cpp\
                      network_event.cpp\
                      new_connection_event.cpp\
+                     protocol_exception.cpp\
                      protocol_handler.cpp\
                      ringbuffer.cpp\
                      stop_event.cpp

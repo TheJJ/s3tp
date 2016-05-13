@@ -3,6 +3,7 @@
 
 
 #include <cstdint>
+#include <memory>
 
 
 namespace s3tpc {
@@ -24,7 +25,7 @@ public:
 	Connection(S3TPClient *parent);
 	virtual ~Connection();
 
-	void initialize(uint16_t id);
+	void initialize(uint16_t id, const std::shared_ptr<Connection> &tracked_self);
 
 	int get_id() const;
 	bool is_initialized() const;

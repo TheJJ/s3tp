@@ -47,6 +47,7 @@ public:
 	void dispatch_incoming_data();
 
 	bool read_opcode_and_event_id();
+	void reset_opcode_and_event_id();
 };
 
 

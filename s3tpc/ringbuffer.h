@@ -3,9 +3,17 @@
 
 
 #include <memory>
+#include <stdexcept>
+#include <string>
 
 
 namespace s3tpc {
+
+
+class RingBufferException : public std::runtime_error {
+public:
+	RingBufferException(const std::string &what);
+};
 
 
 class RingBuffer {

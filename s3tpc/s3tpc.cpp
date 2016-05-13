@@ -69,6 +69,11 @@ void S3TPClient::dispatch_incoming_data() {
 }
 
 
+void S3TPClient::register_connection(const std::shared_ptr<Connection> &connection) {
+	this->connections.insert({connection->get_id(), connection});
+}
+
+
 int S3TPClient::init_socket() {
 	int sock = socket(AF_UNIX, SOCK_STREAM, 0);
 	if (sock < 0) {

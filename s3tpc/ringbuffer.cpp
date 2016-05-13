@@ -11,6 +11,12 @@
 namespace s3tpc {
 
 
+RingBufferException::RingBufferException(const std::string &what)
+	:
+	std::runtime_error{what} {
+}
+
+
 RingBuffer::RingBuffer(size_t capacity, bool can_receive, size_t receive_buffer_size)
 		:
 		length{capacity + 1},
@@ -55,8 +61,7 @@ size_t RingBuffer::read(char *destination, size_t length) {
 
 size_t RingBuffer::write(const char *source, size_t length) {
 	if (length > this->get_available_space()) {
-		// TODO throw error or return zero
-		return 0;
+		throw RingBufferException{"There is not enough space for writing."};
 	}
 
 	if (this->end <= this->start) {
@@ -76,11 +81,10 @@ size_t RingBuffer::write(const char *source, size_t length) {
 
 size_t RingBuffer::recv(int sock) {
 	if (!this->can_receive) {
-		// TODO throw error
+		throw RingBufferException{"RingBuffer cannot receive."};
 	}
 	if (this->receive_buffer_size > this->get_available_space()) {
-		// TODO throw error or return zero
-		return 0;
+		throw RingBufferException{"There is not enough space for receiving."};
 	}
 
 	ssize_t received_size = ::recv(sock, this->receive_buffer.get(), this->receive_buffer_size, 0);
@@ -144,7 +148,7 @@ bool RingBuffer::is_data_available(size_t expected_size, size_t offset) const {
 uint16_t RingBuffer::get_uint16(size_t offset) const {
 	uint16_t value;
 	if (this->get_data(reinterpret_cast<char*>(&value), sizeof(value), offset) != sizeof(value)) {
-		// throw exception
+		throw RingBufferException{"There is not enough data available."};
 	}
 	return value;
 }
@@ -153,7 +157,7 @@ uint16_t RingBuffer::get_uint16(size_t offset) const {
 uint32_t RingBuffer::get_uint32(size_t offset) const {
 	uint32_t value;
 	if (this->get_data(reinterpret_cast<char*>(&value), sizeof(value), offset) != sizeof(value)) {
-		// throw exception
+		throw RingBufferException{"There is not enough data available."};
 	}
 	return value;
 }

@@ -6,6 +6,7 @@
 #include "network_event.h"
 #include "new_connection_event.h"
 #include "opcodes.h"
+#include "protocol_exception.h"
 #include "s3tpc.h"
 
 
@@ -39,16 +40,15 @@ void ProtocolHandler::dispatch_incoming_data() {
 	}
 
 	std::unique_lock<std::mutex> lock{this->events_mutex};
-	auto connection_it = this->events.find(this->current_event_id);
-	if (connection_it == std::end(this->events)) {
-		// TODO illegal response, throw exception or something
-		// does throw really unlock the lock?
-		return;
+	auto event_it = this->events.find(this->current_event_id);
+	if (event_it == std::end(this->events)) {
+		throw ProtocolException{"No matching network event is registered."};
 	}
 
-	bool processed = connection_it->second->handle_response(this->current_opcode, this->buffer);
+	bool processed = event_it->second->handle_response(this->current_opcode, this->buffer);
 	if (processed) {
-		this->events.erase(connection_it);
+		this->events.erase(event_it);
+		this->reset_opcode_and_event_id();
 	}
 	lock.unlock();
 }
@@ -63,9 +63,15 @@ bool ProtocolHandler::read_opcode_and_event_id() {
 		return false;
 	}
 
-	current_opcode = this->buffer.read_uint16();
-	current_event_id = this->buffer.read_uint32();
+	this->current_opcode = this->buffer.read_uint16();
+	this->current_event_id = this->buffer.read_uint32();
 	return true;
+}
+
+
+void ProtocolHandler::reset_opcode_and_event_id() {
+	this->current_opcode = -1;
+	this->current_event_id = -1;
 }
 
 

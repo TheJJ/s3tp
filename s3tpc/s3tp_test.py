@@ -15,5 +15,15 @@ while True:
             break
         print(data)
         event_id = data[2:6]
-        response = struct.pack("<H", 1) + event_id + struct.pack("<I", 1337)
+        response = struct.pack("<H", 1) + event_id + struct.pack("<H", 1337)
+        print(response)
+        c.sendall(response)
+
+        data = c.recv(4096)
+        if not data:
+            break
+        print(data)
+        event_id = data[2:6]
+        response = struct.pack("<H", 2) + event_id
+        print(response)
         c.sendall(response)
