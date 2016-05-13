@@ -17,6 +17,7 @@ private:
 	std::mutex mutex;
 	std::condition_variable resolver;
 	uint32_t id;
+	bool succeeded;
 
 public:
 	Event();
@@ -29,8 +30,11 @@ public:
 
 	uint32_t get_id() const;
 
+	bool has_succeeded() const;
+
 protected:
 	void resolve();
+	void reject();
 };
 
 

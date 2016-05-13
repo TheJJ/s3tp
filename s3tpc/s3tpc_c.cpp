@@ -32,7 +32,6 @@ void s3tp_destroy() {
 
 int s3tp_create() {
 	s3tpc::S3TPClient &client = s3tpc::S3TPClient::get_instance();
-	// TODO handle error
 	auto connection = client.create_connection();
 	if (connection->is_initialized()) {
 		return connection->get_id();
@@ -48,6 +47,15 @@ int s3tp_send(int connection, const char *data, size_t length) {
 
 int s3tp_receive(int connection, char *data, size_t length) {
 	return 0;
+}
+
+
+int s3tp_close(int connection) {
+	s3tpc::S3TPClient &client = s3tpc::S3TPClient::get_instance();
+	if (client.close_connection(connection)) {
+		return 0;
+	}
+	return -1;
 }
 
 

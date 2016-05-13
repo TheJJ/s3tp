@@ -36,7 +36,7 @@ private:
 
 public:
 	Dispatcher(S3TPClient *parent);
-	virtual ~Dispatcher();
+	virtual ~Dispatcher() = default;
 
 	void start();
 	void stop();

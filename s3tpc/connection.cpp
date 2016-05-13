@@ -30,6 +30,11 @@ void Connection::initialize(uint16_t id, const std::shared_ptr<Connection> &trac
 }
 
 
+void Connection::close() {
+	this->parent->deregister_connection(this->get_id());
+}
+
+
 int Connection::get_id() const {
 	return this->id;
 }

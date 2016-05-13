@@ -4,12 +4,12 @@
 
 #include <atomic>
 #include <memory>
+#include <mutex>
 #include <string>
 #include <unordered_map>
 
 #include "connection.h"
 #include "dispatcher.h"
-#include "new_connection_event.h"
 #include "protocol_handler.h"
 
 
@@ -22,6 +22,7 @@ private:
 	ProtocolHandler protocol_handler;
 	Dispatcher dispatcher;
 
+	std::mutex connections_mutex;
 	std::unordered_map<uint16_t,std::shared_ptr<Connection>> connections;
 
 public:
@@ -35,10 +36,12 @@ public:
 	int get_control_socket() const;
 
 	std::shared_ptr<Connection> create_connection();
+	bool close_connection(uint16_t id);
 
 	void dispatch_incoming_data();
 
 	void register_connection(const std::shared_ptr<Connection> &connection);
+	void deregister_connection(uint16_t id);
 
 private:
 	int init_socket();

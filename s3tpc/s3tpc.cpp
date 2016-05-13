@@ -1,5 +1,6 @@
 #include "s3tpc.h"
 
+#include <iostream>
 #include <memory>
 #include <system_error>
 #include <fcntl.h>
@@ -7,6 +8,8 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <unistd.h>
+#include "close_connection_event.h"
+#include "new_connection_event.h"
 
 
 namespace s3tpc {
@@ -57,10 +60,25 @@ int S3TPClient::get_control_socket() const {
 
 std::shared_ptr<Connection> S3TPClient::create_connection() {
 	auto connection = std::make_shared<Connection>(this);
-	auto event = this->protocol_handler.register_new_connection(connection);
+	auto event = this->protocol_handler.register_event<NewConnectionEvent>(connection);
 	this->dispatcher.push_event(event);
 	event->wait_for_resolution();
 	return connection;
+}
+
+
+bool S3TPClient::close_connection(uint16_t id) {
+	std::unique_lock<std::mutex> lock{this->connections_mutex};
+	auto connection_it = this->connections.find(id);
+	if (connection_it == std::end(this->connections)) {
+		return false;
+	}
+	lock.unlock();
+
+	auto event = this->protocol_handler.register_event<CloseConnectionEvent>(connection_it->second);
+	this->dispatcher.push_event(event);
+	event->wait_for_resolution();
+	return event->has_succeeded();
 }
 
 
@@ -70,7 +88,17 @@ void S3TPClient::dispatch_incoming_data() {
 
 
 void S3TPClient::register_connection(const std::shared_ptr<Connection> &connection) {
+	std::unique_lock<std::mutex> lock{this->connections_mutex};
 	this->connections.insert({connection->get_id(), connection});
+}
+
+
+void S3TPClient::deregister_connection(uint16_t id) {
+	std::unique_lock<std::mutex> lock{this->connections_mutex};
+	auto connection_it = this->connections.find(id);
+	if (connection_it != std::end(this->connections)) {
+		this->connections.erase(connection_it);
+	}
 }
 
 

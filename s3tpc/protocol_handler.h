@@ -42,7 +42,13 @@ public:
 	ProtocolHandler(S3TPClient *parent);
 	virtual ~ProtocolHandler() = default;
 
-	std::shared_ptr<NetworkEvent> register_new_connection(const std::shared_ptr<Connection> &connection);
+	template<typename ConnectionType, typename...Args>
+	std::shared_ptr<ConnectionType> register_event(Args&& ...args) {
+		 auto event = std::make_shared<ConnectionType>(std::forward<Args>(args)..., this->event_id_counter++);
+		std::unique_lock<std::mutex> lock{this->events_mutex};
+		this->events.insert({event->get_id(), event});
+		return event;
+	}
 
 	void dispatch_incoming_data();
 

@@ -12,19 +12,15 @@
 namespace s3tpc {
 
 
-class Dispatcher;
-
-
 class NewConnectionEvent : public NetworkEvent {
-private:
-	std::shared_ptr<Connection> connection;
-
 public:
 	NewConnectionEvent(const std::shared_ptr<Connection> &connection, uint32_t id);
 	virtual ~NewConnectionEvent() = default;
 
 	virtual void dispatch(Dispatcher *dispatcher);
 	virtual bool handle_response(uint16_t opcode, RingBuffer &buffer);
+
+	virtual bool supports_opcode(uint16_t opcode) const;
 
 	bool handle_new_connection(RingBuffer &buffer);
 };

@@ -24,14 +24,6 @@ ProtocolHandler::ProtocolHandler(S3TPClient *parent)
 }
 
 
-std::shared_ptr<NetworkEvent> ProtocolHandler::register_new_connection(const std::shared_ptr<Connection> &connection) {
-	auto event = std::make_shared<NewConnectionEvent>(connection, this->event_id_counter++);
-	std::unique_lock<std::mutex> lock{this->events_mutex};
-	this->events.insert({event->get_id(), event});
-	return event;
-}
-
-
 void ProtocolHandler::dispatch_incoming_data() {
 	this->buffer.recv(this->control_socket);
 
@@ -43,6 +35,10 @@ void ProtocolHandler::dispatch_incoming_data() {
 	auto event_it = this->events.find(this->current_event_id);
 	if (event_it == std::end(this->events)) {
 		throw ProtocolException{"No matching network event is registered."};
+	}
+
+	if (!event_it->second->supports_opcode(this->current_opcode)) {
+		throw ProtocolException{"Unsupported opcode for processing event."};
 	}
 
 	bool processed = event_it->second->handle_response(this->current_opcode, this->buffer);

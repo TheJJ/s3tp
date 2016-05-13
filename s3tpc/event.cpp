@@ -12,12 +12,18 @@ Event::Event()
 
 Event::Event(uint32_t id)
 	:
-	id{id} {
+	id{id},
+	succeeded{false} {
 }
 
 
 uint32_t Event::get_id() const {
 	return this->id;
+}
+
+
+bool Event::has_succeeded() const {
+	return this->succeeded;
 }
 
 
@@ -28,6 +34,13 @@ void Event::wait_for_resolution() {
 
 
 void Event::resolve() {
+	this->succeeded = true;
+	this->resolver.notify_all();
+}
+
+
+void Event::reject() {
+	this->succeeded = false;
 	this->resolver.notify_all();
 }
 

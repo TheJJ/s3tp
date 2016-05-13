@@ -17,6 +17,11 @@ int main() {
 	printf("Got connection: %d\n", connection);
 	int connection2 = s3tp_create();
 	printf("Got connection2: %d\n", connection2);
+	int closed = s3tp_close(connection);
+	printf("Closed connection: %d\n", closed);
+	int closed2 = s3tp_close(connection2);
+	printf("Closed connection2: %d\n", closed2);
+
 	fgets(input, sizeof(input), stdin);
 	printf("You've entered: %s\n", input);
 	s3tp_destroy();

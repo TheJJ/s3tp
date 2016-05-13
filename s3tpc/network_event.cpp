@@ -4,9 +4,15 @@
 namespace s3tpc {
 
 
-NetworkEvent::NetworkEvent(uint32_t id)
+NetworkEvent::NetworkEvent(const std::shared_ptr<Connection> &connection, uint32_t id)
 	:
-	Event{id} {
+	Event{id},
+	connection{connection} {
+}
+
+
+std::shared_ptr<Connection> NetworkEvent::get_connection() {
+	return this->connection;
 }
 
 

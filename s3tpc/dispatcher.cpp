@@ -28,10 +28,6 @@ Dispatcher::Dispatcher(S3TPClient *parent)
 }
 
 
-Dispatcher::~Dispatcher() {
-}
-
-
 void Dispatcher::start() {
 	this->is_running = true;
 	auto worker = std::make_unique<std::thread>(&Dispatcher::main_loop, this);

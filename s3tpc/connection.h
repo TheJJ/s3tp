@@ -26,6 +26,7 @@ public:
 	virtual ~Connection();
 
 	void initialize(uint16_t id, const std::shared_ptr<Connection> &tracked_self);
+	void close();
 
 	int get_id() const;
 	bool is_initialized() const;
