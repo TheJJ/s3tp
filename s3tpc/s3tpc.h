@@ -2,6 +2,7 @@
 #define S3TPC_S3TPC_H_
 
 
+#include <atomic>
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -9,6 +10,7 @@
 #include "connection.h"
 #include "dispatcher.h"
 #include "new_connection_event.h"
+#include "protocol_handler.h"
 
 
 namespace s3tpc {
@@ -17,6 +19,7 @@ namespace s3tpc {
 class S3TPClient {
 private:
 	int control_socket;
+	ProtocolHandler protocol_handler;
 	Dispatcher dispatcher;
 
 public:

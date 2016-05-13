@@ -15,19 +15,33 @@ private:
 	size_t end;
 	std::unique_ptr<char[]> buffer;
 
+	bool can_receive;
+	size_t receive_buffer_size;
+	std::unique_ptr<char[]> receive_buffer;
+
 public:
-	RingBuffer(size_t capacity);
+	RingBuffer(size_t capacity, bool can_receive=false, size_t receive_buffer_size=4096);
 	virtual ~RingBuffer() = default;
 
+	size_t get_data(char *destination, size_t length, size_t offset=0) const;
 	size_t read(char *destination, size_t length);
 	size_t write(const char *source, size_t length);
+
+	size_t recv(int sock);
+
+	size_t discard(size_t length);
 
 	bool is_empty() const;
 	bool is_full() const;
 
 	size_t get_capacity() const;
-	size_t get_available_data() const;
+	size_t get_available_data(size_t offset=0) const;
 	size_t get_available_space() const;
+
+	bool is_data_available(size_t expected_size, size_t offset=0) const;
+
+	uint16_t get_uint16(size_t offset=0) const;
+	uint32_t get_uint32(size_t offset=0) const;
 };
 
 

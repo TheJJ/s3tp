@@ -25,6 +25,16 @@ void do_read(RingBuffer &r, size_t size) {
 }
 
 
+void do_get(RingBuffer &r, size_t size, size_t offset) {
+	char dst[10] = {0};
+	size_t ret = r.get_data(dst, size, offset);
+	cout << "\ndo_get: " << ret << endl;
+	write(0, dst, size);
+	cout << endl;
+	state(r);
+}
+
+
 void do_write(RingBuffer &r, size_t offset, size_t size) {
 	const char *src = "ABCDEFGHIJ";
 	size_t ret = r.write(src + offset, size);
@@ -38,9 +48,16 @@ int main() {
 
 	do_write(r, 0, 4);
 	do_write(r, 4, 2);
+
+	cout << "available at offset 0: " << r.get_available_data(0) << endl;
+	cout << "available at offset 3: " << r.get_available_data(3) << endl;
+
+	do_get(r, 6, 0);
+	do_get(r, 4, 4);
 	do_read(r, 4);
 
 	do_write(r, 0, 8);
+	do_get(r, 10, 0);
 	do_read(r, 10);
 
 	return 0;

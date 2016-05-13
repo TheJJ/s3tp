@@ -1,4 +1,5 @@
 import socket
+import struct
 
 addr = "/tmp/test"
 s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
@@ -13,3 +14,6 @@ while True:
         if not data:
             break
         print(data)
+        event_id = data[2:6]
+        response = struct.pack("<H", 1) + event_id + struct.pack("<I", 1337)
+        c.sendall(response)

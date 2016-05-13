@@ -8,8 +8,6 @@
 #include <sys/un.h>
 #include <unistd.h>
 
-#include "new_connection_event.h"
-
 
 namespace s3tpc {
 
@@ -17,6 +15,7 @@ namespace s3tpc {
 S3TPClient::S3TPClient()
 	:
 	control_socket{this->init_socket()},
+	protocol_handler{this},
 	dispatcher{this} {
 }
 
@@ -58,7 +57,7 @@ int S3TPClient::get_control_socket() const {
 
 std::shared_ptr<Connection> S3TPClient::create_connection() {
 	auto connection = std::make_shared<Connection>(this);
-	auto event = std::make_shared<NewConnectionEvent>(connection);
+	auto event = this->protocol_handler.register_new_connection(connection);
 	this->dispatcher.push_event(event);
 	event->wait_for_resolution();
 	return connection;
@@ -66,6 +65,7 @@ std::shared_ptr<Connection> S3TPClient::create_connection() {
 
 
 void S3TPClient::dispatch_incoming_data() {
+	this->protocol_handler.dispatch_incoming_data();
 }
 
 

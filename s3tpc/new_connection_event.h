@@ -2,6 +2,7 @@
 #define S3TPC_NEW_CONNECTION_EVENT_H_
 
 
+#include <cstdint>
 #include <memory>
 
 #include "connection.h"
@@ -19,7 +20,7 @@ private:
 	std::shared_ptr<Connection> connection;
 
 public:
-	NewConnectionEvent(const std::shared_ptr<Connection> &connection);
+	NewConnectionEvent(const std::shared_ptr<Connection> &connection, uint32_t id);
 	virtual ~NewConnectionEvent() = default;
 
 	void initialize_connection(uint16_t id);
