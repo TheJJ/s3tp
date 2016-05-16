@@ -24,6 +24,8 @@ public:
 	static constexpr const size_t RECEIVE_SIZE = 4096;
 	static constexpr const size_t BUFFER_SIZE = 65536;
 
+	static constexpr const uint32_t NO_MATCHING_EVENT = 0;
+
 private:
 	S3TPClient *parent;
 	int control_socket;
@@ -44,7 +46,11 @@ public:
 
 	template<typename ConnectionType, typename...Args>
 	std::shared_ptr<ConnectionType> register_event(Args&& ...args) {
-		 auto event = std::make_shared<ConnectionType>(std::forward<Args>(args)..., this->event_id_counter++);
+		uint32_t event_id = this->event_id_counter++;
+		if (event_id == 0) {
+			event_id = this->event_id_counter++;
+		}
+		auto event = std::make_shared<ConnectionType>(std::forward<Args>(args)..., event_id);
 		std::unique_lock<std::mutex> lock{this->events_mutex};
 		this->events.insert({event->get_id(), event});
 		return event;

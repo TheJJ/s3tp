@@ -18,7 +18,7 @@ ProtocolHandler::ProtocolHandler(S3TPClient *parent)
 	parent{parent},
 	control_socket{parent->get_control_socket()},
 	buffer{ProtocolHandler::BUFFER_SIZE, true, ProtocolHandler::RECEIVE_SIZE},
-	event_id_counter{0},
+	event_id_counter{1},
 	current_opcode{-1},
 	current_event_id{-1} {
 }
@@ -30,6 +30,8 @@ void ProtocolHandler::dispatch_incoming_data() {
 	if (!this->read_opcode_and_event_id()) {
 		return;
 	}
+
+	// TODO if current_event_id == 0 (NO_MATCHING_EVENT) then there is no corresponding event
 
 	std::unique_lock<std::mutex> lock{this->events_mutex};
 	auto event_it = this->events.find(this->current_event_id);

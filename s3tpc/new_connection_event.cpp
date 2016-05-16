@@ -2,7 +2,6 @@
 
 #include <cstring>
 #include <sys/socket.h>
-#include "dispatcher.h"
 #include "opcodes.h"
 
 
@@ -19,12 +18,8 @@ void NewConnectionEvent::dispatch(Dispatcher *dispatcher) {
 	int control_socket = dispatcher->get_control_socket();
 	char buffer[6];
 
-	uint16_t opcode = NEW_CONNECTION_REQUEST;
-	uint32_t event_id = this->get_id();
-
-	memcpy(buffer, &opcode, 2);
-	memcpy(buffer+2, &event_id, 4);
-	send(control_socket, buffer, 6, 0);
+	this->init_header(buffer, NEW_CONNECTION_REQUEST);
+	send(control_socket, buffer, sizeof(buffer), 0);
 	// TODO handle error
 }
 
@@ -53,7 +48,7 @@ bool NewConnectionEvent::handle_new_connection(RingBuffer &buffer) {
 
 	uint16_t connection_id = buffer.read_uint16();
 	auto connection = this->get_connection();
-	connection->initialize(connection_id, connection);
+	this->get_connection()->register_with_id(connection_id, connection);
 	this->resolve();
 	return true;
 }

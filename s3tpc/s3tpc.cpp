@@ -9,6 +9,7 @@
 #include <sys/un.h>
 #include <unistd.h>
 #include "close_connection_event.h"
+#include "connect_event.h"
 #include "new_connection_event.h"
 #include "protocol_exception.h"
 
@@ -29,7 +30,7 @@ S3TPClient::~S3TPClient() {
 }
 
 
-void S3TPClient::connect(const std::string &socket_path) {
+void S3TPClient::connect_to_s3tpd(const std::string &socket_path) {
 	struct sockaddr_un addr;
 	addr.sun_family = AF_UNIX;
 	strncpy(addr.sun_path, socket_path.c_str(), sizeof(addr.sun_path));
@@ -69,17 +70,12 @@ std::shared_ptr<Connection> S3TPClient::create_connection() {
 
 
 bool S3TPClient::close_connection(uint16_t id) {
-	std::unique_lock<std::mutex> lock{this->connections_mutex};
-	auto connection_it = this->connections.find(id);
-	if (connection_it == std::end(this->connections)) {
-		return false;
-	}
-	lock.unlock();
+	return this->create_and_wait_for_connection_event<CloseConnectionEvent>(id);
+}
 
-	auto event = this->protocol_handler.register_event<CloseConnectionEvent>(connection_it->second);
-	this->dispatcher.push_event(event);
-	event->wait_for_resolution();
-	return event->has_succeeded();
+
+bool S3TPClient::connect(uint16_t id, uint16_t port) {
+	return this->create_and_wait_for_connection_event<ConnectEvent>(id, port);
 }
 
 
@@ -128,6 +124,16 @@ void S3TPClient::unblock_socket(int sock) {
 	if (ret != 0) {
 		throw std::system_error(errno, std::system_category());
 	}
+}
+
+
+std::shared_ptr<Connection> S3TPClient::get_connection(uint16_t id) {
+	std::unique_lock<std::mutex> lock{this->connections_mutex};
+	auto connection_it = this->connections.find(id);
+	if (connection_it == std::end(this->connections)) {
+		return nullptr;
+	}
+	return connection_it->second;
 }
 
 

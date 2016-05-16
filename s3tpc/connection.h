@@ -12,6 +12,14 @@ namespace s3tpc {
 class S3TPClient;
 
 
+enum class ConnectionState {
+	NEW,
+	REGISTERED,
+	INITIALIZED,
+	CLOSED
+};
+
+
 class Connection {
 public:
 	static constexpr const uint16_t NEW_CONNECTION_ID = 0;
@@ -19,17 +27,24 @@ public:
 private:
 	S3TPClient *parent;
 	uint16_t id;
-	bool initialized;
+	uint16_t local_port;
+	uint16_t remote_port;
+	ConnectionState state;
 
 public:
 	Connection(S3TPClient *parent);
-	virtual ~Connection();
+	virtual ~Connection() = default;
 
-	void initialize(uint16_t id, const std::shared_ptr<Connection> &tracked_self);
+	void register_with_id(uint16_t id, const std::shared_ptr<Connection> &tracked_self);
+	void initialize_ports(uint16_t local_port, uint16_t remote_port);
 	void close();
 
-	int get_id() const;
-	bool is_initialized() const;
+	uint16_t get_id() const;
+	uint16_t get_local_port() const;
+	uint16_t get_remote_port() const;
+
+	bool has_state(const ConnectionState &state) const;
+	ConnectionState get_state() const;
 };
 
 

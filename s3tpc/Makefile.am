@@ -10,6 +10,7 @@ libs3tp_la_SOURCES = \
                      s3tpc.cpp\
                      s3tpc_c.cpp\
                      close_connection_event.cpp\
+                     connect_event.cpp\
                      connection.cpp\
                      dispatcher.cpp\
                      event.cpp\

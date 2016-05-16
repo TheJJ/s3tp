@@ -1,4 +1,5 @@
 import socket
+import time
 from struct import pack
 
 
@@ -22,12 +23,15 @@ class S3TPTester:
         while True:
             self.communicate(1, pack("<H", 1337))
             self.communicate(1, pack("<H", 235))
+            self.communicate(11, pack("<H", 1234))
+            self.communicate(12)
             self.communicate(4)
             self.communicate(4)
 
     def communicate(self, opcode, content=b""):
             self.receive()
             self.respond(opcode, content)
+            time.sleep(1.0)
 
     def receive(self):
         data = self.c.recv(4096)

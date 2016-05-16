@@ -29,7 +29,7 @@ public:
 	S3TPClient();
 	virtual ~S3TPClient();
 
-	void connect(const std::string &socket_path);
+	void connect_to_s3tpd(const std::string &socket_path);
 	void start();
 	void stop();
 
@@ -38,10 +38,27 @@ public:
 	std::shared_ptr<Connection> create_connection();
 	bool close_connection(uint16_t id);
 
+	bool connect(uint16_t id, uint16_t port);
+
 	void dispatch_incoming_data();
 
 	void register_connection(const std::shared_ptr<Connection> &connection);
 	void deregister_connection(uint16_t id);
+
+	std::shared_ptr<Connection> get_connection(uint16_t id);
+
+protected:
+	template<typename EventType, typename... Args>
+	bool create_and_wait_for_connection_event(uint16_t id, Args&& ...args) {
+		auto connection = this->get_connection(id);
+		if (!connection) {
+			return false;
+		}
+		auto event = this->protocol_handler.register_event<EventType>(connection, std::forward<Args>(args)...);
+		this->dispatcher.push_event(event);
+		event->wait_for_resolution();
+		return event->has_succeeded();
+	}
 
 private:
 	int init_socket();

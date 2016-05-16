@@ -3,8 +3,10 @@
 
 
 #include <cstdint>
+#include <memory>
 
 #include "connection.h"
+#include "dispatcher.h"
 #include "network_event.h"
 
 
