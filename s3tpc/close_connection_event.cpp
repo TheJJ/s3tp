@@ -12,7 +12,7 @@ namespace s3tpc {
 
 CloseConnectionEvent::CloseConnectionEvent(const std::shared_ptr<Connection> &connection, uint32_t id)
 	:
-	NetworkEvent{connection, id} {
+	RequestResponseEvent{connection, CLOSE_CONNECTION_BASE, id} {
 }
 
 
@@ -28,23 +28,9 @@ void CloseConnectionEvent::dispatch(Dispatcher *dispatcher) {
 }
 
 
-bool CloseConnectionEvent::handle_response(uint16_t opcode, RingBuffer &buffer) {
-	switch(opcode) {
-	case CLOSE_CONNECTION_ACK:
-		this->get_connection()->close();
-		this->resolve();
-		return true;
-	case CLOSE_CONNECTION_NACK:
-		this->get_connection()->close();
-		this->reject();
-		return true;
-	}
+bool CloseConnectionEvent::handle_acknowledgement(RingBuffer &buffer) {
+	this->get_connection()->close();
 	return true;
-}
-
-
-bool CloseConnectionEvent::supports_opcode(uint16_t opcode) const {
-	return opcode == CLOSE_CONNECTION_ACK || opcode == CLOSE_CONNECTION_NACK;
 }
 
 

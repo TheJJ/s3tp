@@ -10,7 +10,7 @@ namespace s3tpc {
 
 NewConnectionEvent::NewConnectionEvent(const std::shared_ptr<Connection> &connection, uint32_t id)
 	:
-	NetworkEvent{connection, id} {
+	RequestResponseEvent{connection, NEW_CONNECTION_BASE, id} {
 }
 
 
@@ -24,24 +24,7 @@ void NewConnectionEvent::dispatch(Dispatcher *dispatcher) {
 }
 
 
-bool NewConnectionEvent::handle_response(uint16_t opcode, RingBuffer &buffer) {
-	switch(opcode) {
-	case NEW_CONNECTION_ACK:
-		return this->handle_new_connection(buffer);
-	case NEW_CONNECTION_NACK:
-		this->reject();
-		return true;
-	}
-	return true;
-}
-
-
-bool NewConnectionEvent::supports_opcode(uint16_t opcode) const {
-	return opcode == NEW_CONNECTION_ACK || opcode == NEW_CONNECTION_NACK;
-}
-
-
-bool NewConnectionEvent::handle_new_connection(RingBuffer &buffer) {
+bool NewConnectionEvent::handle_acknowledgement(RingBuffer &buffer) {
 	if (!buffer.is_data_available(2)) {
 		return false;
 	}
@@ -49,7 +32,6 @@ bool NewConnectionEvent::handle_new_connection(RingBuffer &buffer) {
 	uint16_t connection_id = buffer.read_uint16();
 	auto connection = this->get_connection();
 	this->get_connection()->register_with_id(connection_id, connection);
-	this->resolve();
 	return true;
 }
 

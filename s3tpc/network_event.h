@@ -27,6 +27,8 @@ protected:
 	std::shared_ptr<Connection> get_connection();
 
 	void init_header(char *buffer, uint16_t opcode);
+
+	void reject_and_close();
 };
 
 

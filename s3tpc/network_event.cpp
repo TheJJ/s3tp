@@ -25,4 +25,10 @@ void NetworkEvent::init_header(char *buffer, uint16_t opcode) {
 }
 
 
+void NetworkEvent::reject_and_close() {
+	this->connection->close();
+	this->reject();
+}
+
+
 }

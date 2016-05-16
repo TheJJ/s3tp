@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include "close_connection_event.h"
 #include "connect_event.h"
+#include "listen_event.h"
 #include "new_connection_event.h"
 #include "protocol_exception.h"
 
@@ -65,6 +66,9 @@ std::shared_ptr<Connection> S3TPClient::create_connection() {
 	auto event = this->protocol_handler.register_event<NewConnectionEvent>(connection);
 	this->dispatcher.push_event(event);
 	event->wait_for_resolution();
+	if (connection->has_state(ConnectionState::NEW)) {
+		return nullptr;
+	}
 	return connection;
 }
 
@@ -76,6 +80,11 @@ bool S3TPClient::close_connection(uint16_t id) {
 
 bool S3TPClient::connect(uint16_t id, uint16_t port) {
 	return this->create_and_wait_for_connection_event<ConnectEvent>(id, port);
+}
+
+
+bool S3TPClient::listen(uint16_t id, uint16_t port) {
+	return this->create_and_wait_for_connection_event<ListenEvent>(id, port);
 }
 
 

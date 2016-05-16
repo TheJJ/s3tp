@@ -14,33 +14,33 @@ int main() {
 		return 1;
 	}
 	int connection = s3tp_create();
-	printf("\nGot connection: %d\n", connection);
+	printf("\n(%d) Got connection\n", connection);
 	int connection2 = s3tp_create();
-	printf("Got connection2: %d\n", connection2);
+	printf("(%d) Got connection\n", connection2);
 
 	int local_port = s3tp_local_port(connection);
-	printf("\nLocal port: %d\n", local_port);
+	printf("\n(%d) Local port: %d\n", connection,  local_port);
 	int remote_port = s3tp_remote_port(connection);
-	printf("Remote port: %d\n", remote_port);
+	printf("(%d) Remote port: %d\n", connection, remote_port);
 
-	int connected = s3tp_connect(connection, 80);
-	printf("\nConnected: %d\n", connected);
+	int listening = s3tp_listen(connection, 80);
+	printf("\n(%d) Listening: %d\n", connection, listening);
 	local_port = s3tp_local_port(connection);
-	printf("Local port: %d\n", local_port);
+	printf("(%d) Local port: %d\n", connection, local_port);
 	remote_port = s3tp_remote_port(connection);
-	printf("Remote port: %d\n", remote_port);
+	printf("(%d) Remote port: %d\n", connection, remote_port);
 
-	int connected2 = s3tp_connect(connection2, 80);
-	printf("\nConnected2: %d\n", connected2);
+	int connected = s3tp_connect(connection2, 80);
+	printf("\n(%d) Connected: %d\n", connection2, connected);
 	local_port = s3tp_local_port(connection2);
-	printf("Local port2: %d\n", local_port);
+	printf("(%d) Local port: %d\n", connection2, local_port);
 	remote_port = s3tp_remote_port(connection2);
-	printf("Remote port2: %d\n", remote_port);
+	printf("(%d) Remote port: %d\n", connection2, remote_port);
 
 	int closed = s3tp_close(connection);
-	printf("\nClosed connection: %d\n", closed);
+	printf("\n(%d) Closed connection: %d\n", connection, closed);
 	int closed2 = s3tp_close(connection2);
-	printf("Closed connection2: %d\n", closed2);
+	printf("(%d) Closed connection2: %d\n", connection2, closed2);
 
 	fgets(input, sizeof(input), stdin);
 	printf("You've entered: %s\n", input);

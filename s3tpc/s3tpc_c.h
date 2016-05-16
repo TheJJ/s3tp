@@ -22,6 +22,7 @@ void s3tp_destroy();
 int s3tp_create();
 int s3tp_connect(int connection, uint16_t port);
 int s3tp_listen(int connection, uint16_t port);
+int s3tp_wait_for_peer(int connection);
 int s3tp_send(int connection, const char *data, size_t length);
 int s3tp_receive(int connection, char *data, size_t length);
 int s3tp_close(int connection);
