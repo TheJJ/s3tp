@@ -18,8 +18,6 @@ public:
 	CloseConnectionEvent(const std::shared_ptr<Connection> &connection, uint32_t id);
 	virtual ~CloseConnectionEvent() = default;
 
-	virtual void dispatch(Dispatcher *dispatcher);
-
 protected:
 	virtual bool handle_acknowledgement(RingBuffer &buffer);
 };

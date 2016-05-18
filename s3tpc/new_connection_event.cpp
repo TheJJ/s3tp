@@ -14,13 +14,8 @@ NewConnectionEvent::NewConnectionEvent(const std::shared_ptr<Connection> &connec
 }
 
 
-void NewConnectionEvent::dispatch(Dispatcher *dispatcher) {
-	int control_socket = dispatcher->get_control_socket();
-	char buffer[6];
-
-	this->init_header(buffer, NEW_CONNECTION_REQUEST);
-	send(control_socket, buffer, sizeof(buffer), 0);
-	// TODO handle error
+bool NewConnectionEvent::request_has_connection_id() const {
+	return false;
 }
 
 

@@ -15,15 +15,13 @@ ListenEvent::ListenEvent(const std::shared_ptr<Connection> &connection, uint16_t
 }
 
 
-void ListenEvent::dispatch(Dispatcher *dispatcher) {
-	int control_socket = dispatcher->get_control_socket();
-	char buffer[10];
-	uint16_t connection_id = this->get_connection()->get_id();
+size_t ListenEvent::get_request_payload_size() const {
+	return 2;
+}
 
-	this->init_header(buffer, LISTEN_REQUEST);
-	memcpy(buffer+6, &connection_id, 2);
-	memcpy(buffer+8, &this->listen_port, 2);
-	send(control_socket, buffer, sizeof(buffer), 0);
+
+void ListenEvent::build_request_payload(char *buffer) const {
+	memcpy(buffer, &this->listen_port, 2);
 }
 
 

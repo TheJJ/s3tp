@@ -18,9 +18,9 @@ public:
 	NewConnectionEvent(const std::shared_ptr<Connection> &connection, uint32_t id);
 	virtual ~NewConnectionEvent() = default;
 
-	virtual void dispatch(Dispatcher *dispatcher);
-
 protected:
+	virtual bool request_has_connection_id() const;
+
 	virtual bool handle_acknowledgement(RingBuffer &buffer);
 };
 
