@@ -3,6 +3,7 @@
 
 #include <cstring>
 #include <sys/socket.h>
+#include "byteutils.h"
 #include "dispatcher.h"
 #include "opcodes.h"
 
@@ -31,11 +32,10 @@ void RequestResponseEvent::dispatch(Dispatcher *dispatcher) {
 	}
 
 	char buffer[request_size];
-	memcpy(buffer, &opcode, 2);
-	memcpy(buffer+2, &event_id, 4);
+	write_uint16(buffer, opcode);
+	write_uint32(buffer+2, event_id);
 	if (include_connection_id) {
-		uint16_t connection_id = this->get_connection()->get_id();
-		memcpy(buffer+6, &connection_id, 2);
+		write_uint32(buffer+6, this->get_connection()->get_id());
 	}
 
 	this->build_request_payload(buffer + payload_offset);

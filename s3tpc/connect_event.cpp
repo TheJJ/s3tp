@@ -1,6 +1,7 @@
 #include "connect_event.h"
 
 #include <cstring>
+#include "byteutils.h"
 #include "opcodes.h"
 
 
@@ -20,7 +21,7 @@ size_t ConnectEvent::get_request_payload_size() const {
 
 
 void ConnectEvent::build_request_payload(char *buffer) const {
-	memcpy(buffer, &this->destination_port, 2);
+	write_uint16(buffer, this->destination_port);
 }
 
 

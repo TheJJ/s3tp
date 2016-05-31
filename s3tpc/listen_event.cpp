@@ -1,6 +1,7 @@
 #include "listen_event.h"
 
 #include <cstring>
+#include "byteutils.h"
 #include "opcodes.h"
 
 
@@ -20,7 +21,7 @@ size_t ListenEvent::get_request_payload_size() const {
 
 
 void ListenEvent::build_request_payload(char *buffer) const {
-	memcpy(buffer, &this->listen_port, 2);
+	write_uint16(buffer, this->listen_port);
 }
 
 

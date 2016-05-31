@@ -9,6 +9,7 @@ libs3tp_la_LDFLAGS = -no-undefined -pthread
 libs3tp_la_SOURCES = \
                      s3tpc.cpp\
                      s3tpc_c.cpp\
+                     byteutils.cpp\
                      close_connection_event.cpp\
                      connect_event.cpp\
                      connection.cpp\

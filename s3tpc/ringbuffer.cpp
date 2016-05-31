@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <cstring>
 #include <iostream>
+#include <netinet/in.h>
 #include <system_error>
 #include <sys/socket.h>
 
@@ -150,7 +151,7 @@ uint16_t RingBuffer::get_uint16(size_t offset) const {
 	if (this->get_data(reinterpret_cast<char*>(&value), sizeof(value), offset) != sizeof(value)) {
 		throw RingBufferException{"There is not enough data available."};
 	}
-	return value;
+	return ntohs(value);
 }
 
 
@@ -159,7 +160,7 @@ uint32_t RingBuffer::get_uint32(size_t offset) const {
 	if (this->get_data(reinterpret_cast<char*>(&value), sizeof(value), offset) != sizeof(value)) {
 		throw RingBufferException{"There is not enough data available."};
 	}
-	return value;
+	return ntohl(value);
 }
 
 
