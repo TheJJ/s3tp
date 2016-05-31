@@ -62,7 +62,12 @@ int s3tp_listen(int connection, uint16_t port) {
 
 
 int s3tp_wait_for_peer(int connection) {
-	return 0;
+	s3tpc::S3TPClient &client = s3tpc::S3TPClient::get_instance();
+	// TODO exception handling
+	if (client.wait_for_peer(connection)) {
+		return 0;
+	}
+	return -1;
 }
 
 

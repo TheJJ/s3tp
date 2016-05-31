@@ -21,7 +21,8 @@ libs3tp_la_SOURCES = \
                      protocol_handler.cpp\
                      request_response_event.cpp\
                      ringbuffer.cpp\
-                     stop_event.cpp
+                     stop_event.cpp\
+                     wait_for_peer_event.cpp
 
 s3tpincludedir = $(includedir)/s3tp
 s3tpinclude_HEADERS = \

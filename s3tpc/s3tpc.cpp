@@ -13,6 +13,7 @@
 #include "listen_event.h"
 #include "new_connection_event.h"
 #include "protocol_exception.h"
+#include "wait_for_peer_event.h"
 
 
 namespace s3tpc {
@@ -85,6 +86,11 @@ bool S3TPClient::connect(uint16_t id, uint16_t port) {
 
 bool S3TPClient::listen(uint16_t id, uint16_t port) {
 	return this->create_and_wait_for_connection_event<ListenEvent>(id, port);
+}
+
+
+bool S3TPClient::wait_for_peer(uint16_t id) {
+	return this->create_and_wait_for_connection_event<WaitForPeerEvent>(id);
 }
 
 

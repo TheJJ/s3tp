@@ -1,7 +1,5 @@
 #include "new_connection_event.h"
 
-#include <cstring>
-#include <sys/socket.h>
 #include "opcodes.h"
 
 

@@ -3,9 +3,9 @@
 
 
 #include <cstdint>
+#include <memory>
 
 #include "connection.h"
-#include "dispatcher.h"
 #include "request_response_event.h"
 
 

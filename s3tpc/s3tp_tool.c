@@ -30,6 +30,13 @@ int main() {
 	remote_port = s3tp_remote_port(connection);
 	printf("(%d) Remote port: %d\n", connection, remote_port);
 
+	int wait = s3tp_wait_for_peer(connection);
+	printf("\n(%d) Waiting for peer: %d\n", connection, wait);
+	local_port = s3tp_local_port(connection);
+	printf("(%d) Local port: %d\n", connection, local_port);
+	remote_port = s3tp_remote_port(connection);
+	printf("(%d) Remote port: %d\n", connection, remote_port);
+
 	int connected = s3tp_connect(connection2, 80);
 	printf("\n(%d) Connected: %d\n", connection2, connected);
 	local_port = s3tp_local_port(connection2);

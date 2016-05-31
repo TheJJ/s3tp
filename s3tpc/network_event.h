@@ -4,6 +4,7 @@
 
 #include <cstdint>
 #include <memory>
+
 #include "event.h"
 #include "connection.h"
 #include "ringbuffer.h"

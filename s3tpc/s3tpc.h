@@ -40,6 +40,7 @@ public:
 
 	bool connect(uint16_t id, uint16_t port);
 	bool listen(uint16_t id, uint16_t port);
+	bool wait_for_peer(uint16_t id);
 
 	void dispatch_incoming_data();
 
