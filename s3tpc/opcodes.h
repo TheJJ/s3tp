@@ -37,6 +37,11 @@ constexpr const uint16_t CONNECT_REQUEST = CONNECT_BASE;
 constexpr const uint16_t CONNECT_ACK = CONNECT_BASE + ACK_OFFSET;
 constexpr const uint16_t CONNECT_NACK = CONNECT_BASE + NACK_OFFSET;
 
+constexpr const uint16_t RECV_BASE = 15;
+constexpr const uint16_t RECV_REQUEST = RECV_BASE;
+constexpr const uint16_t RECV_ACK = RECV_BASE + ACK_OFFSET;
+constexpr const uint16_t RECV_NACK = RECV_BASE + NACK_OFFSET;
+
 
 }
 

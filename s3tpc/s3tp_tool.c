@@ -13,6 +13,9 @@ int main() {
 		perror("Error");
 		return 1;
 	}
+
+	char buffer[100];
+
 	int connection = s3tp_create();
 	printf("\n(%d) Got connection\n", connection);
 	int connection2 = s3tp_create();
@@ -43,6 +46,19 @@ int main() {
 	printf("(%d) Local port: %d\n", connection2, local_port);
 	remote_port = s3tp_remote_port(connection2);
 	printf("(%d) Remote port: %d\n", connection2, remote_port);
+
+	int received = s3tp_receive(connection, buffer, 128);
+	printf("\n(%d) Received: %d", connection, received);
+	if (received > 0) {
+		printf(" %s", buffer);
+	}
+	printf("\n");
+	int received2 = s3tp_receive(connection2, buffer, 128);
+	printf("\n(%d) Received: %d", connection2, received2);
+	if (received2 > 0) {
+		printf(" %s", buffer);
+	}
+	printf("\n");
 
 	int closed = s3tp_close(connection);
 	printf("\n(%d) Closed connection: %d\n", connection, closed);

@@ -1,6 +1,5 @@
 #include "connect_event.h"
 
-#include <cstring>
 #include "byteutils.h"
 #include "opcodes.h"
 

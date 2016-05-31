@@ -71,13 +71,14 @@ int s3tp_wait_for_peer(int connection) {
 }
 
 
-int s3tp_send(int connection, const char *data, size_t length) {
+int s3tp_send(int connection, const char *data, uint16_t length) {
 	return 0;
 }
 
 
-int s3tp_receive(int connection, char *data, size_t length) {
-	return 0;
+int s3tp_receive(int connection, char *destination, uint16_t length) {
+	s3tpc::S3TPClient &client = s3tpc::S3TPClient::get_instance();
+	return client.receive(connection, destination, length);
 }
 
 

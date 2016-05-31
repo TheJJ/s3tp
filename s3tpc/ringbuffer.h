@@ -46,6 +46,7 @@ public:
 	size_t get_available_data(size_t offset=0) const;
 	size_t get_available_space() const;
 
+	bool is_length_prefixed_data_available() const;
 	bool is_data_available(size_t expected_size, size_t offset=0) const;
 
 	uint16_t get_uint16(size_t offset=0) const;

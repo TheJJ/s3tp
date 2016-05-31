@@ -26,6 +26,8 @@ class S3TPTester:
             self.communicate(7)
             self.communicate(10, pack(">H", 88))
             self.communicate(13, pack(">H", 1234))
+            self.communicate(16, pack(">H", 6) + b"Hello\0")
+            self.communicate(17)
             self.communicate(4)
             self.communicate(5)
 

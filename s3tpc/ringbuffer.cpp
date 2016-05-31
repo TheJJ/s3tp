@@ -84,11 +84,12 @@ size_t RingBuffer::recv(int sock) {
 	if (!this->can_receive) {
 		throw RingBufferException{"RingBuffer cannot receive."};
 	}
-	if (this->receive_buffer_size > this->get_available_space()) {
-		throw RingBufferException{"There is not enough space for receiving."};
+	size_t size = std::min(this->receive_buffer_size, this->get_available_space());
+	if (size == 0) {
+		return 0;
 	}
 
-	ssize_t received_size = ::recv(sock, this->receive_buffer.get(), this->receive_buffer_size, 0);
+	ssize_t received_size = ::recv(sock, this->receive_buffer.get(), size, 0);
 	if (received_size < 0) {
 		throw std::system_error{errno, std::system_category()};
 	}
@@ -138,6 +139,15 @@ size_t RingBuffer::get_available_data(size_t offset) const {
 
 size_t RingBuffer::get_available_space() const {
 	return this->get_capacity() - this->get_available_data();
+}
+
+
+bool RingBuffer::is_length_prefixed_data_available() const {
+	if (!this->is_data_available(2)) {
+		return false;
+	}
+	uint16_t expected_length = this->get_uint16();
+	return this->is_data_available(expected_length, 2);
 }
 
 

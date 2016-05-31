@@ -22,7 +22,10 @@ class S3TPClient;
 class ProtocolHandler {
 public:
 	static constexpr const size_t RECEIVE_SIZE = 4096;
-	static constexpr const size_t BUFFER_SIZE = 65536;
+
+	// TODO choose an appropriate size with respect to the maximum possible
+	// message size
+	static constexpr const size_t BUFFER_SIZE = 2 * 65536;
 
 	static constexpr const uint32_t NO_MATCHING_EVENT = 0;
 

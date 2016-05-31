@@ -42,6 +42,8 @@ public:
 	bool listen(uint16_t id, uint16_t port);
 	bool wait_for_peer(uint16_t id);
 
+	int receive(uint16_t id, char *destination, uint16_t length);
+
 	void dispatch_incoming_data();
 
 	void register_connection(const std::shared_ptr<Connection> &connection);
@@ -51,15 +53,24 @@ public:
 
 protected:
 	template<typename EventType, typename... Args>
-	bool create_and_wait_for_connection_event(uint16_t id, Args&& ...args) {
+	std::shared_ptr<EventType> create_and_wait_for_connection_event(uint16_t id, Args&& ...args) {
 		auto connection = this->get_connection(id);
 		if (!connection) {
-			return false;
+			return nullptr;
 		}
 		auto event = this->protocol_handler.register_event<EventType>(connection, std::forward<Args>(args)...);
 		this->dispatcher.push_event(event);
 		event->wait_for_resolution();
-		return event->has_succeeded();
+		return event;
+	}
+
+	template<typename EventType, typename... Args>
+	bool create_and_wait_for_connection_event_succeeded(uint16_t id, Args&& ...args) {
+		auto event = this->create_and_wait_for_connection_event<EventType>(id, std::forward<Args>(args)...);
+		if (event) {
+			return event->has_succeeded();
+		}
+		return false;
 	}
 
 private:
