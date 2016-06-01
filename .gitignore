@@ -57,3 +57,9 @@ Makefile.in
 # ctrlp and rope for vim
 .ctrlp
 .ropeproject
+
+# tex
+*.aux
+*.log
+*.out
+*.pdf
