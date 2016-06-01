@@ -18,7 +18,7 @@ public:
 	StopEvent(std::function<void()> stop_function);
 	virtual ~StopEvent() = default;
 
-	virtual void dispatch(Dispatcher *dispatcher);
+	virtual void dispatch(Dispatcher *dispatcher) override;
 };
 
 

@@ -1,7 +1,7 @@
 # build libs3tp and the s3tp tool
 
 # c11 plus all warnings
-AM_CXXFLAGS = -std=c++14 -Wall -Wextra -pedantic -pthread
+AM_CXXFLAGS = -std=c++14 -Wall -Wextra -pedantic -pthread -Wsuggest-override
 
 # s3tp library
 lib_LTLIBRARIES = libs3tp.la

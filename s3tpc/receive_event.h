@@ -26,10 +26,10 @@ public:
 	uint16_t get_actual_received_size() const;
 
 protected:
-	virtual size_t get_request_payload_size() const;
-	virtual void build_request_payload(char *buffer) const;
+	virtual size_t get_request_payload_size() const override;
+	virtual void build_request_payload(char *buffer) const override;
 
-	virtual bool handle_acknowledgement(RingBuffer &buffer);
+	virtual bool handle_acknowledgement(RingBuffer &buffer) override;
 };
 
 

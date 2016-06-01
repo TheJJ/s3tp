@@ -17,10 +17,10 @@ public:
 	                     uint16_t opcode_base, uint32_t id);
 	virtual ~RequestResponseEvent() = default;
 
-	virtual void dispatch(Dispatcher *dispatcher);
+	virtual void dispatch(Dispatcher *dispatcher) override;
 
-	virtual bool handle_response(uint16_t opcode, RingBuffer &buffer);
-	virtual bool supports_opcode(uint16_t opcode) const;
+	virtual bool handle_response(uint16_t opcode, RingBuffer &buffer) override;
+	virtual bool supports_opcode(uint16_t opcode) const override;
 
 protected:
 	virtual bool request_has_connection_id() const;

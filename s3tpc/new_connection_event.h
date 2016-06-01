@@ -18,9 +18,9 @@ public:
 	virtual ~NewConnectionEvent() = default;
 
 protected:
-	virtual bool request_has_connection_id() const;
+	virtual bool request_has_connection_id() const override;
 
-	virtual bool handle_acknowledgement(RingBuffer &buffer);
+	virtual bool handle_acknowledgement(RingBuffer &buffer) override;
 };
 
 

@@ -36,7 +36,7 @@ void Dispatcher::start() {
 
 
 void Dispatcher::stop() {
-	auto stop_event = std::make_shared<StopEvent>([this]() {
+	auto stop_event = std::make_shared<StopEvent>([this] {
 		this->is_running = false;
 	});
 	this->push_event(stop_event);

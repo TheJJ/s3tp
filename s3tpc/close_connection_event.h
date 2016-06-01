@@ -18,7 +18,7 @@ public:
 	virtual ~CloseConnectionEvent() = default;
 
 protected:
-	virtual bool handle_acknowledgement(RingBuffer &buffer);
+	virtual bool handle_acknowledgement(RingBuffer &buffer) override;
 };
 
 
