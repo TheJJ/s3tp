@@ -27,7 +27,7 @@ public:
 protected:
 	std::shared_ptr<Connection> get_connection();
 
-	void reject_and_close();
+	void reject_and_close(uint16_t error);
 };
 
 

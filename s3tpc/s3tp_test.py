@@ -27,15 +27,19 @@ class S3TPTester:
             self.communicate(10, pack(">H", 88))
             self.communicate(13, pack(">H", 1234))
             self.communicate(16, pack(">H", 6) + b"Hello\0")
-            self.communicate(17)
+            self.nack(17, 2)
             self.communicate(19)
             self.communicate(4)
-            self.communicate(5)
 
     def communicate(self, opcode, content=b""):
-            self.receive()
-            self.respond(opcode, content)
-            time.sleep(1.0)
+        self.receive()
+        self.respond(opcode, content)
+        time.sleep(1.0)
+
+    def nack(self, opcode, error=0):
+        self.receive()
+        self.respond(opcode, pack(">H", error))
+        time.sleep(1.0)
 
     def receive(self):
         data = self.c.recv(4096)

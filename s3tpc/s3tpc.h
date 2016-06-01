@@ -37,14 +37,14 @@ public:
 	int get_control_socket() const;
 
 	std::shared_ptr<Connection> create_connection();
-	bool close_connection(uint16_t id);
+	int close_connection(uint16_t id);
 
-	bool connect(uint16_t id, uint16_t port);
-	bool listen(uint16_t id, uint16_t port);
-	bool wait_for_peer(uint16_t id);
+	int connect(uint16_t id, uint16_t port);
+	int listen(uint16_t id, uint16_t port);
+	int wait_for_peer(uint16_t id);
 
 	int receive(uint16_t id, char *destination, uint16_t length);
-	bool send(uint16_t id, const char *data, uint16_t length);
+	int send(uint16_t id, const char *data, uint16_t length);
 
 	void dispatch_incoming_data();
 
@@ -68,13 +68,16 @@ protected:
 	}
 
 	template<typename EventType, typename... Args>
-	bool create_and_wait_for_connection_event_succeeded(uint16_t id,
+	int create_and_wait_for_connection_event_succeeded(uint16_t id,
 			const std::unordered_set<ConnectionState> &states, Args&& ...args) {
 		auto event = this->create_and_wait_for_connection_event<EventType>(id, states, std::forward<Args>(args)...);
-		if (event) {
-			return event->has_succeeded();
+		if (!event) {
+			return -1;
 		}
-		return false;
+		if (event->has_succeeded()) {
+			return 0;
+		}
+		return -event->get_error();
 	}
 
 private:

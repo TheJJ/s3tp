@@ -53,10 +53,18 @@ bool RequestResponseEvent::handle_response(uint16_t opcode, RingBuffer &buffer) 
 		}
 		return false;
 	} else if (opcode == this->opcode_base + NACK_OFFSET) {
-		this->reject_and_close();
-		return true;
+		return this->handle_error(buffer);
 	}
 	// TODO assert illegal opcode
+	return true;
+}
+
+
+bool RequestResponseEvent::handle_error(RingBuffer &buffer) {
+	if (!buffer.is_data_available(2)) {
+		return false;
+	}
+	this->reject_and_close(buffer.read_uint16());
 	return true;
 }
 

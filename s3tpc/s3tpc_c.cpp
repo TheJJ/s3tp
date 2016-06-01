@@ -44,40 +44,26 @@ int s3tp_create() {
 int s3tp_connect(int connection, uint16_t port) {
 	s3tpc::S3TPClient &client = s3tpc::S3TPClient::get_instance();
 	// TODO exception handling
-	if (client.connect(connection, port)) {
-		return 0;
-	}
-	return -1;
+	return client.connect(connection, port);
 }
 
 
 int s3tp_listen(int connection, uint16_t port) {
 	s3tpc::S3TPClient &client = s3tpc::S3TPClient::get_instance();
 	// TODO exception handling
-	if (client.listen(connection, port)) {
-		return 0;
-	}
-	return -1;
+	return client.listen(connection, port);
 }
 
 
 int s3tp_wait_for_peer(int connection) {
 	s3tpc::S3TPClient &client = s3tpc::S3TPClient::get_instance();
-	// TODO exception handling
-	if (client.wait_for_peer(connection)) {
-		return 0;
-	}
-	return -1;
+	return client.wait_for_peer(connection);
 }
 
 
 int s3tp_send(int connection, const char *data, uint16_t length) {
 	s3tpc::S3TPClient &client = s3tpc::S3TPClient::get_instance();
-	// TODO exception handling
-	if (client.send(connection, data, length)) {
-		return 0;
-	}
-	return -1;
+	return client.send(connection, data, length);
 }
 
 
@@ -91,10 +77,7 @@ int s3tp_receive(int connection, char *destination, uint16_t length) {
 int s3tp_close(int connection) {
 	s3tpc::S3TPClient &client = s3tpc::S3TPClient::get_instance();
 	// TODO exception handling
-	if (client.close_connection(connection)) {
-		return 0;
-	}
-	return -1;
+	return client.close_connection(connection);
 }
 
 

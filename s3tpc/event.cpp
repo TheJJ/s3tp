@@ -13,12 +13,18 @@ Event::Event()
 Event::Event(uint32_t id)
 	:
 	id{id},
-	succeeded{false} {
+	succeeded{false},
+	error{0} {
 }
 
 
 uint32_t Event::get_id() const {
 	return this->id;
+}
+
+
+uint16_t Event::get_error() const {
+	return this->error;
 }
 
 
@@ -39,8 +45,9 @@ void Event::resolve() {
 }
 
 
-void Event::reject() {
+void Event::reject(uint16_t error) {
 	this->succeeded = false;
+	this->error = error;
 	this->resolver.notify_all();
 }
 

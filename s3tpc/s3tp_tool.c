@@ -71,7 +71,7 @@ int main() {
 	int closed = s3tp_close(connection);
 	printf("\n(%d) Closed connection: %d\n", connection, closed);
 	int closed2 = s3tp_close(connection2);
-	printf("(%d) Closed connection2: %d\n", connection2, closed2);
+	printf("(%d) Closed connection: %d\n", connection2, closed2);
 
 	s3tp_destroy();
 

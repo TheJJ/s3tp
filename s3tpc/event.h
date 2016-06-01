@@ -18,6 +18,7 @@ private:
 	std::condition_variable resolver;
 	uint32_t id;
 	bool succeeded;
+	uint16_t error;
 
 public:
 	Event();
@@ -29,12 +30,13 @@ public:
 	virtual void dispatch(Dispatcher *dispatcher) = 0;
 
 	uint32_t get_id() const;
+	uint16_t get_error() const;
 
 	bool has_succeeded() const;
 
 protected:
 	void resolve();
-	void reject();
+	void reject(uint16_t error=0);
 };
 
 
