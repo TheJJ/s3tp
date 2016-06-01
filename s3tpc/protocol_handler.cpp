@@ -32,7 +32,6 @@ void ProtocolHandler::dispatch_incoming_data() {
 	}
 
 	// TODO if current_event_id == 0 (NO_MATCHING_EVENT) then there is no corresponding event
-
 	std::unique_lock<std::mutex> lock{this->events_mutex};
 	auto event_it = this->events.find(this->current_event_id);
 	if (event_it == std::end(this->events)) {

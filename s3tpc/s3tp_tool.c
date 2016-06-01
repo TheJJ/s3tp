@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
+#include <string.h>
 #include <s3tp.h>
 #include <unistd.h>
 
@@ -54,19 +55,25 @@ int main() {
 	}
 	printf("\n");
 	int received2 = s3tp_receive(connection2, buffer, 128);
-	printf("\n(%d) Received: %d", connection2, received2);
+	printf("(%d) Received: %d", connection2, received2);
 	if (received2 > 0) {
 		printf(" %s", buffer);
 	}
 	printf("\n");
+
+	printf("\nPlease enter data: ");
+	fgets(input, sizeof(input), stdin);
+	printf("You've entered: %s\n", input);
+
+	int sent = s3tp_send(connection, input, strlen(input));
+	printf("\n(%d) Sent: %d %s\n", connection, sent, input);
 
 	int closed = s3tp_close(connection);
 	printf("\n(%d) Closed connection: %d\n", connection, closed);
 	int closed2 = s3tp_close(connection2);
 	printf("(%d) Closed connection2: %d\n", connection2, closed2);
 
-	fgets(input, sizeof(input), stdin);
-	printf("You've entered: %s\n", input);
 	s3tp_destroy();
+
 	return 0;
 }

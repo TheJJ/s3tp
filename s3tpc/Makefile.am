@@ -23,6 +23,7 @@ libs3tp_la_SOURCES = \
                      receive_event.cpp\
                      request_response_event.cpp\
                      ringbuffer.cpp\
+                     send_event.cpp\
                      stop_event.cpp\
                      wait_for_peer_event.cpp
 

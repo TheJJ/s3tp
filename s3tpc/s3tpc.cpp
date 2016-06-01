@@ -14,6 +14,7 @@
 #include "new_connection_event.h"
 #include "protocol_exception.h"
 #include "receive_event.h"
+#include "send_event.h"
 #include "wait_for_peer_event.h"
 
 
@@ -76,31 +77,44 @@ std::shared_ptr<Connection> S3TPClient::create_connection() {
 
 
 bool S3TPClient::close_connection(uint16_t id) {
-	return this->create_and_wait_for_connection_event_succeeded<CloseConnectionEvent>(id);
+	return this->create_and_wait_for_connection_event_succeeded<CloseConnectionEvent>(id, {
+			ConnectionState::REGISTERED, ConnectionState::LISTENING,
+			ConnectionState::CONNECTED_LISTENER, ConnectionState::CONNECTED_PEER });
 }
 
 
 bool S3TPClient::connect(uint16_t id, uint16_t port) {
-	return this->create_and_wait_for_connection_event_succeeded<ConnectEvent>(id, port);
+	return this->create_and_wait_for_connection_event_succeeded<ConnectEvent>(id, {
+			ConnectionState::REGISTERED }, port);
 }
 
 
 bool S3TPClient::listen(uint16_t id, uint16_t port) {
-	return this->create_and_wait_for_connection_event_succeeded<ListenEvent>(id, port);
+	return this->create_and_wait_for_connection_event_succeeded<ListenEvent>(id, {
+			ConnectionState::REGISTERED }, port);
 }
 
 
 bool S3TPClient::wait_for_peer(uint16_t id) {
-	return this->create_and_wait_for_connection_event_succeeded<WaitForPeerEvent>(id);
+	return this->create_and_wait_for_connection_event_succeeded<WaitForPeerEvent>(id, {
+			ConnectionState::LISTENING });
 }
 
 
 int S3TPClient::receive(uint16_t id, char *destination, uint16_t length) {
-	auto event = this->create_and_wait_for_connection_event<ReceiveEvent>(id, destination, length);
+	auto event = this->create_and_wait_for_connection_event<ReceiveEvent>(id, {
+			ConnectionState::CONNECTED_LISTENER, ConnectionState::CONNECTED_PEER
+		}, destination, length);
 	if (event && event->has_succeeded()) {
 		return event->get_actual_received_size();
 	}
 	return -1;
+}
+
+bool S3TPClient::send(uint16_t id, const char *data, uint16_t length) {
+	return this->create_and_wait_for_connection_event_succeeded<SendEvent>(id, {
+			ConnectionState::CONNECTED_LISTENER, ConnectionState::CONNECTED_PEER
+		}, data, length);
 }
 
 

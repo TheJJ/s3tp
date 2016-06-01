@@ -7,6 +7,7 @@
 #include <mutex>
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 
 #include "connection.h"
 #include "dispatcher.h"
@@ -43,6 +44,7 @@ public:
 	bool wait_for_peer(uint16_t id);
 
 	int receive(uint16_t id, char *destination, uint16_t length);
+	bool send(uint16_t id, const char *data, uint16_t length);
 
 	void dispatch_incoming_data();
 
@@ -53,9 +55,10 @@ public:
 
 protected:
 	template<typename EventType, typename... Args>
-	std::shared_ptr<EventType> create_and_wait_for_connection_event(uint16_t id, Args&& ...args) {
+	std::shared_ptr<EventType> create_and_wait_for_connection_event(uint16_t id,
+			const std::unordered_set<ConnectionState> &states, Args&& ...args) {
 		auto connection = this->get_connection(id);
-		if (!connection) {
+		if (!connection || states.find(connection->get_state()) == std::end(states))  {
 			return nullptr;
 		}
 		auto event = this->protocol_handler.register_event<EventType>(connection, std::forward<Args>(args)...);
@@ -65,8 +68,9 @@ protected:
 	}
 
 	template<typename EventType, typename... Args>
-	bool create_and_wait_for_connection_event_succeeded(uint16_t id, Args&& ...args) {
-		auto event = this->create_and_wait_for_connection_event<EventType>(id, std::forward<Args>(args)...);
+	bool create_and_wait_for_connection_event_succeeded(uint16_t id,
+			const std::unordered_set<ConnectionState> &states, Args&& ...args) {
+		auto event = this->create_and_wait_for_connection_event<EventType>(id, states, std::forward<Args>(args)...);
 		if (event) {
 			return event->has_succeeded();
 		}
