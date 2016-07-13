@@ -13,13 +13,6 @@ import struct
 MESSAGE_IDS = dict()
 
 
-class ProtoNotImplementedError(NotImplementedError):
-    """
-    Exception thrown when some protocol handling was not yet implemented.
-    """
-    pass
-
-
 class MessageMeta(ABCMeta):
     """
     Message metaclass.

@@ -69,7 +69,6 @@ def main():
     logging.info("cleaning up...")
 
 
-
 if __name__ == "__main__":
     try:
         main()
