@@ -3,9 +3,6 @@
 # c11 plus all warnings
 AM_CFLAGS = -std=c11 -Wall -Wextra -pedantic
 
-# flex flags
-AM_LFLAGS = -Ca
-
 # s3tp library
 lib_LTLIBRARIES = libs3tp.la
 libs3tp_la_LDFLAGS = -no-undefined

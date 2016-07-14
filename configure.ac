@@ -5,6 +5,7 @@ AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 
 AM_PROG_AR
 AC_PROG_CC
+AC_PROG_CXX
 
 AC_CONFIG_MACRO_DIRS([m4])
 
@@ -12,5 +13,6 @@ LT_INIT
 
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([Makefile
-                 s3tpc/Makefile])
+                 s3tpc/Makefile
+                 s3tpd/Makefile])
 AC_OUTPUT
