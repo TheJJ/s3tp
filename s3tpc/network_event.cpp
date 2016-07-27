@@ -19,7 +19,7 @@ std::shared_ptr<Connection> NetworkEvent::get_connection() {
 
 
 void NetworkEvent::reject_and_close(uint16_t error) {
-	this->connection->close();
+	this->connection->close_due_to_error();
 	this->reject(error);
 }
 

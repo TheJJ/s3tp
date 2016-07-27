@@ -23,6 +23,7 @@ void Connection::register_with_id(uint16_t id, const std::shared_ptr<Connection>
 		this->id = id;
 		this->parent->register_connection(tracked_self);
 	}
+	// TODO assert illegal state
 }
 
 
@@ -32,6 +33,7 @@ void Connection::connect_peer(uint16_t local_port, uint16_t remote_port) {
 		this->local_port = local_port;
 		this->remote_port = remote_port;
 	}
+	// TODO assert illegal state
 }
 
 
@@ -40,6 +42,7 @@ void Connection::listen(uint16_t listen_port) {
 		this->state = ConnectionState::LISTENING;
 		this->local_port = listen_port;
 	}
+	// TODO assert illegal state
 }
 
 
@@ -47,6 +50,17 @@ void Connection::connect_listener(uint16_t remote_port) {
 	if (this->has_state(ConnectionState::LISTENING)) {
 		this->state = ConnectionState::CONNECTED_LISTENER;
 		this->remote_port = remote_port;
+	}
+	// TODO assert illegal state
+}
+
+
+void Connection::close_due_to_error() {
+	if (this->has_state(ConnectionState::CONNECTED_LISTENER)) {
+		this->state = ConnectionState::LISTENING;
+		this->remote_port = -1;
+	} else {
+		this->close();
 	}
 }
 
@@ -56,6 +70,7 @@ void Connection::close() {
 		this->state = ConnectionState::CLOSED;
 		this->parent->deregister_connection(this->get_id());
 	}
+	// TODO assert illegal state
 }
 
 

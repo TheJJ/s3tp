@@ -41,6 +41,7 @@ public:
 	void connect_peer(uint16_t local_port, uint16_t remote_port);
 	void listen(uint16_t listen_port);
 	void connect_listener(uint16_t remote_port);
+	void close_due_to_error();
 	void close();
 
 	uint16_t get_id() const;

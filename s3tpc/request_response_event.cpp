@@ -35,7 +35,7 @@ void RequestResponseEvent::dispatch(Dispatcher *dispatcher) {
 	write_uint16(buffer, opcode);
 	write_uint32(buffer+2, event_id);
 	if (include_connection_id) {
-		write_uint32(buffer+6, this->get_connection()->get_id());
+		write_uint16(buffer+6, this->get_connection()->get_id());
 	}
 
 	this->build_request_payload(buffer + payload_offset);
