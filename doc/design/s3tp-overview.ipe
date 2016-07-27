@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE ipe SYSTEM "ipe.dtd">
 <ipe version="70005" creator="Ipe 7.1.3">
-<info created="D:20160504211041" modified="D:20160504234427" title="s3tp" author="Jonas Jelten" subject="s3tp overview"/>
+<info created="D:20160504211041" modified="D:20160714142323" title="s3tp" author="Jonas Jelten" subject="s3tp overview"/>
 <preamble>\let\tempone\itemize
 \let\temptwo\enditemize
 \renewenvironment{itemize}{\tempone\addtolength{\itemsep}{-0.5em}}{\temptwo}
@@ -207,13 +207,13 @@ h
 <dashstyle name="dash dotted" value="[4 2 1 2] 0"/>
 <dashstyle name="dash dot dotted" value="[4 2 1 2 1 2] 0"/>
 <textsize name="large" value="\large"/>
+<textsize name="small" value="\small"/>
+<textsize name="tiny" value="\tiny"/>
 <textsize name="Large" value="\Large"/>
 <textsize name="LARGE" value="\LARGE"/>
 <textsize name="huge" value="\huge"/>
 <textsize name="Huge" value="\Huge"/>
-<textsize name="small" value="\small"/>
 <textsize name="footnote" value="\footnotesize"/>
-<textsize name="tiny" value="\tiny"/>
 <textstyle name="center" begin="\begin{center}" end="\end{center}"/>
 <textstyle name="itemize" begin="\begin{itemize}" end="\end{itemize}"/>
 <textstyle name="item" begin="\begin{itemize}\item{}" end="\end{itemize}"/>
@@ -237,28 +237,28 @@ h
 <page>
 <layer name="alpha"/>
 <view layers="alpha" active="alpha"/>
-<path layer="alpha" matrix="1 0 0 2.25 0 -720" stroke="black" pen="fat">
+<path layer="alpha" matrix="0.9 0 0 2.25 44.8 -720" stroke="black" pen="fat">
 128 576 m
 128 512 l
 448 512 l
 448 576 l
 h
 </path>
-<path matrix="0.5 0 0 2 32 -432" stroke="black">
+<path matrix="0.5 0 0 2 74.4349 -432" stroke="black">
 192 464 m
 192 432 l
 384 432 l
 384 464 l
 h
 </path>
-<path matrix="1 0 0 0.625 0 208" stroke="black" pen="fat">
+<path matrix="1.16666 0 0 0.625 -21.3333 208" stroke="black" pen="fat">
 128 768 m
 128 640 l
 320 640 l
 320 768 l
 h
 </path>
-<path matrix="1 0 0 1 0 -32" stroke="black" pen="fat">
+<path matrix="1.25 0 0 1 -48 -32" stroke="black" pen="fat">
 256 704 m
 256 640 l
 320 640 l
@@ -270,15 +270,15 @@ h
 280.181 640 l
 </path>
 <text matrix="1 0 0 1 -24 -28" transformations="translations" pos="288 592" stroke="black" type="label" width="131.259" height="6.92" depth="1.77" valign="baseline">UNIX socket \texttt{\footnotesize /run/s3tp/control}</text>
-<path matrix="1.5 0 0 1 -128 -0" stroke="black">
+<path matrix="1.5 0 0 1 -128 0" stroke="black">
 256 560 m
 256 576 l
 384 576 l
 384 560 l
 h
 </path>
-<text matrix="1 0 0 1 4 -4" transformations="translations" pos="132 564" stroke="black" type="label" width="28.354" height="8.307" depth="2.32" valign="baseline" size="large">s3tpd</text>
-<text matrix="1 0 0 1 0 -32" transformations="translations" pos="260 692" stroke="black" type="label" width="23.025" height="6.428" depth="1.93" valign="baseline">s3tpc</text>
+<text matrix="1 0 0 1 46.4349 -4" transformations="translations" pos="132 564" stroke="black" type="label" width="28.354" height="8.307" depth="2.32" valign="baseline" size="large">s3tpd</text>
+<text matrix="1 0 0 1 18.5653 -32" transformations="translations" pos="260 692" stroke="black" type="label" width="23.025" height="6.428" depth="1.93" valign="baseline">s3tpc</text>
 <text matrix="1 0 0 1 4 -84" transformations="translations" pos="132 756" stroke="black" type="label" width="22.762" height="8.302" depth="0" valign="baseline" size="large">Tool</text>
 <path matrix="1 0 0 0.625 0 208" stroke="black" pen="fat">
 432 640 m
@@ -304,18 +304,18 @@ h
 h
 </path>
 <text matrix="1 0 0 1 0 -32" transformations="translations" pos="372 692" stroke="black" type="label" width="23.025" height="6.428" depth="1.93" valign="baseline">s3tpc</text>
-<text matrix="1 0 0 1 0 -32" transformations="translations" pos="260 672" stroke="black" type="label" width="39.629" height="6.926" depth="1.93" valign="baseline">C library</text>
+<text matrix="1 0 0 1 18.5653 -32" transformations="translations" pos="260 672" stroke="black" type="label" width="65.089" height="6.926" depth="1.93" valign="baseline">C++14 library</text>
 <path matrix="1 0 0 0.5 0 288" stroke="black" pen="fat" arrow="normal/normal" rarrow="normal/normal">
 376 640 m
 376 576 l
 </path>
-<text matrix="1 0 0 1 -56 -4" transformations="translations" pos="172 556" stroke="black" type="minipage" width="192" height="23.839" depth="18.89" valign="top">\begin{itemize}
-\item buffering
+<text matrix="1 0 0 1 -13.5651 -4" transformations="translations" pos="172 556" stroke="black" type="minipage" width="192" height="23.839" depth="18.89" valign="top">\begin{itemize}
+\item buffering and reordering
 \item transmission control
 \item connection tracking
 \end{itemize}</text>
-<text matrix="1 0 0 1 4 0" transformations="translations" pos="132 484" stroke="black" type="label" width="62.543" height="6.918" depth="0" valign="baseline">COM backend</text>
-<text matrix="1 0 0 1 20 0" transformations="translations" pos="228 484" stroke="black" type="label" width="76.546" height="6.918" depth="0" valign="baseline">Network Backend</text>
+<text matrix="1 0 0 1 46.4349 0" transformations="translations" pos="132 484" stroke="black" type="label" width="62.543" height="6.918" depth="0" valign="baseline">COM backend</text>
+<text matrix="1 0 0 1 62.4349 0" transformations="translations" pos="228 484" stroke="black" type="label" width="76.546" height="6.918" depth="0" valign="baseline">Network Backend</text>
 <path stroke="black" pen="ultrafat">
 128 408 m
 128 384 l
@@ -323,7 +323,7 @@ h
 448 408 l
 h
 </path>
-<path matrix="1.2 0 0 1 -28.8 0" stroke="black">
+<path matrix="1.2 0 0 1 13.6349 0" stroke="black">
 224 496 m
 224 432 l
 304 432 l
@@ -331,12 +331,12 @@ h
 h
 </path>
 <text matrix="1 0 0 1 4 0" transformations="translations" pos="132 396" stroke="black" type="label" width="67.141" height="8.302" depth="0" valign="baseline" size="large">Linux Kernel</text>
-<text matrix="1 0 0 1 -192 32" transformations="translations" pos="368 528" stroke="black" type="label" width="75.467" height="6.926" depth="1.93" valign="baseline">Python 3 asyncio</text>
-<text matrix="4.10426 0 0 1.33333 -425.762 -162.667" transformations="translations" pos="132 476" stroke="black" type="minipage" width="108" height="11.594" depth="6.61" valign="top" size="footnote">\begin{itemize}
+<text matrix="1 0 0 1 -149.565 32" transformations="translations" pos="368 528" stroke="black" type="label" width="32.655" height="6.808" depth="0.83" valign="baseline">C++14</text>
+<text matrix="4.10426 0 0 1.33333 -383.327 -162.667" transformations="translations" pos="132 476" stroke="black" type="minipage" width="108" height="11.594" depth="6.61" valign="top" size="footnote">\begin{itemize}
 \item SPI communication
 \item Integrity verification
 \end{itemize}</text>
-<text matrix="4.10426 0 0 1.33333 -313.762 -162.665" transformations="translations" pos="132 476" stroke="black" type="minipage" width="104" height="11.594" depth="6.61" valign="top" size="footnote">\begin{itemize}
+<text matrix="4.10426 0 0 1.33333 -271.327 -162.665" transformations="translations" pos="132 476" stroke="black" type="minipage" width="104" height="11.594" depth="6.61" valign="top" size="footnote">\begin{itemize}
 \item TCP communication
 \item Used for testing
 \end{itemize}</text>
@@ -348,9 +348,21 @@ h
 252 432 m
 252 408 l
 </path>
-<text transformations="translations" pos="116 664" stroke="black" type="minipage" width="136" height="15.408" depth="10.44" valign="top">\begin{itemize}
-\item Ground station
-\item On-board
+<text matrix="1.09369 0 0 1 -10.8682 0" transformations="translations" pos="116 664" stroke="black" type="minipage" width="153.504" height="22.871" depth="17.92" valign="top">\begin{itemize}
+\item Performs any task
+\item Listens / connect to peer
+\item Ground station or on-board
 \end{itemize}</text>
+<path matrix="1.16666 0 0 0.625 -21.3333 208" stroke="black" pen="fat">
+128 768 m
+128 640 l
+320 640 l
+320 768 l
+h
+</path>
+<path matrix="1 0 0 3.125 -136 -1392" stroke="black" pen="fat" arrow="normal/normal" rarrow="normal/normal">
+280.181 576 m
+280.181 640 l
+</path>
 </page>
 </ipe>
