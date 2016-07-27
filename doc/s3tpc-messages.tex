@@ -1,0 +1,179 @@
+\documentclass[11pt,a4paper,oneside,english]{scrartcl}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[pdftex,
+            pdfauthor={Andre Kupka},
+            pdftitle={s3tpc messages},
+            pdfsubject={},
+            pdfkeywords={tum munich warr moveII},
+            pdfcreator={pdfLaTeX}
+            ]{hyperref}
+\usepackage{bytefield}
+
+\hypersetup{
+    colorlinks,
+    citecolor=blue,
+    filecolor=blue,
+    linkcolor=blue,
+    urlcolor=blue
+}
+
+\title{s3tpc messages}
+\author{Andre Kupka, Jonas Jelten\\ \texttt{\{kupka,jelten\}@in.tum.de}\\}
+\date{\today}
+
+\newenvironment{netpacket}{
+\begin{bytefield}[bitwidth=1.1em]{32}
+\bitheader{0-31}\\}
+{\end{bytefield}}
+
+\begin{document}
+
+\newpage
+\maketitle
+
+\section{s3tpc messages}
+
+Every field is stored in big-endian order.
+
+\subsection{s3tpc basic packet structure}
+
+\begin{netpacket}
+    \bitbox{16}{opcode} & \bitbox{16}{event\_id (first 2 bytes)}\\
+    \bitbox{16}{event\_id (second 2 bytes)} & \bitbox[tlr]{16}{}\\
+    \wordbox[lr]{1}{payload (opcode dependent)}\\
+    \skippedwords\\
+    \wordbox[blr]{1}{}
+\end{netpacket}
+
+\subsection{NEW\_CONNECTION\_REQUEST (0)}
+
+No payload.
+
+\subsection{NEW\_CONNECTION\_ACK (1)}
+
+\begin{netpacket}
+    \bitbox{16}{connection\_id}
+\end{netpacket}
+
+\subsection{NEW\_CONNECTION\_NACK (2)}
+
+\begin{netpacket}
+    \bitbox{16}{error code}
+\end{netpacket}
+
+\subsection{CLOSE\_CONNECTION\_REQUEST (3)}
+
+\begin{netpacket}
+    \bitbox{16}{connection\_id}
+\end{netpacket}
+
+\subsection{CLOSE\_CONNECTION\_ACK (4)}
+
+No payload
+
+\subsection{CLOSE\_CONNECTION\_NACK (5)}
+
+\begin{netpacket}
+    \bitbox{16}{error code}
+\end{netpacket}
+
+\subsection{LISTEN\_REQUEST (6)}
+
+\begin{netpacket}
+    \bitbox{16}{connection\_id} & \bitbox{16}{listen port}
+\end{netpacket}
+
+\subsection{LISTEN\_ACK (7)}
+
+No payload
+
+\subsection{LISTEN\_NACK (8)}
+
+\begin{netpacket}
+    \bitbox{16}{error code}
+\end{netpacket}
+
+\subsection{WAIT\_FOR\_PEER\_REQUEST (9)}
+
+\begin{netpacket}
+    \bitbox{16}{connection\_id}
+\end{netpacket}
+
+\subsection{WAIT\_FOR\_PEER\_ACK (10)}
+
+\begin{netpacket}
+    \bitbox{16}{peer port}
+\end{netpacket}
+
+\subsection{WAIT\_FOR\_PEER\_NACK (11)}
+
+\begin{netpacket}
+    \bitbox{16}{error code}
+\end{netpacket}
+
+\subsection{CONNECT\_REQUEST (12)}
+
+\begin{netpacket}
+    \bitbox{16}{connection\_id} & \bitbox{16}{destination port}
+\end{netpacket}
+
+\subsection{CONNECT\_ACK (13)}
+
+\begin{netpacket}
+    \bitbox{16}{local port}
+\end{netpacket}
+
+\subsection{CONNECT\_NACK (14)}
+
+\begin{netpacket}
+    \bitbox{16}{error code}
+\end{netpacket}
+
+\subsection{RECV\_REQUEST (15)}
+
+\begin{netpacket}
+    \bitbox{16}{connection\_id} & \bitbox{16}{expected length}
+\end{netpacket}
+
+\subsection{RECV\_ACK (16)}
+
+\begin{netpacket}
+    \bitbox{16}{actual length} & \bitbox[tlr]{16}{}\\
+    \wordbox[lr]{1}{data}\\
+    \skippedwords\\
+    \wordbox[blr]{1}{}
+\end{netpacket}
+
+\subsection{RECV\_NACK (17)}
+
+\begin{netpacket}
+    \bitbox{16}{error code}
+\end{netpacket}
+
+\subsection{SEND\_REQUEST (18)}
+
+\begin{netpacket}
+    \bitbox{16}{connection\_id} & \bitbox{16}{length}\\
+    \wordbox[tlr]{1}{data}\\
+    \skippedwords\\
+    \wordbox[blr]{1}{}
+\end{netpacket}
+
+\subsection{SEND\_ACK (19)}
+
+No payload
+
+\subsection{SEND\_NACK (20)}
+
+\begin{netpacket}
+    \bitbox{16}{error code}
+\end{netpacket}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
